@@ -1,11 +1,11 @@
 /**
  *  This file is part of Sphinx Blackjack.
- * 
+ *
  *  Sphinx Blackjack is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  Sphinx Blackjack is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,93 +16,87 @@
  */
 package org.giccon.ai.sphinx_blackjack.card;
 
-import java.awt.Image;
+import org.giccon.ai.sphinx_blackjack.exception.SystemFaultException;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-
-import org.giccon.ai.sphinx_blackjack.exception.SystemFaultException;
-
 /**
  * @author Paul Minasian
- * 
  */
 public class CardImageManager {
-	private static final String IMAGE_PATH = ""
-			+ "org/giccon/ai/sphinx_blackjack/assets/images/cards.png";
+    private static final String IMAGE_PATH = ""
+            + "org/giccon/ai/sphinx_blackjack/assets/images/cards.png";
 
-	private static CardImageManager instance;
+    private static final CardImageManager instance = new CardImageManager();
 
-	private Map<Rank, Map<Suit, Image>> cardImages;
-	private Image backOfCardImage;
+    private Map<Rank, Map<Suit, Image>> cardImages;
+    private Image backOfCardImage;
 
-	private int cardWidth;
-	private int cardHeight;
+    private int cardWidth;
+    private int cardHeight;
 
-	private CardImageManager() {
-		loadCardImages();
-	}
+    private CardImageManager() {
+        loadCardImages();
+    }
 
-	private void loadCardImages() {
-		URL cardsUrl = ClassLoader.getSystemResource(IMAGE_PATH);
-		BufferedImage bi;
-		try {
-			bi = ImageIO.read(cardsUrl);
-		} catch (IOException e) {
-			throw new SystemFaultException("Cannot load "
-					+ "the cards image file", e);
-		}
+    private void loadCardImages() {
+        URL cardsUrl = ClassLoader.getSystemResource(IMAGE_PATH);
+        BufferedImage bi;
+        try {
+            bi = ImageIO.read(cardsUrl);
+        } catch (IOException e) {
+            throw new SystemFaultException("Cannot load "
+                    + "the cards image file", e);
+        }
 
-		cardImages = new HashMap<Rank, Map<Suit, Image>>();
+        cardImages = new HashMap<Rank, Map<Suit, Image>>();
 
-		int x, y = 0;
-		cardWidth = bi.getWidth() / 13;
-		cardHeight = bi.getHeight() / 5;
-		for (Suit suit : Suit.values()) {
-			x = 0;
-			for (Rank rank : Rank.values()) {
-				BufferedImage cardImage = bi.getSubimage(x++ * cardWidth, y
-						* cardHeight, cardWidth, cardHeight);
+        int x, y = 0;
+        cardWidth = bi.getWidth() / 13;
+        cardHeight = bi.getHeight() / 5;
+        for (Suit suit : Suit.values()) {
+            x = 0;
+            for (Rank rank : Rank.values()) {
+                BufferedImage cardImage = bi.getSubimage(x++ * cardWidth, y
+                        * cardHeight, cardWidth, cardHeight);
 
-				Map<Suit, Image> images = cardImages.get(rank);
-				if (images == null) {
-					images = new HashMap<Suit, Image>();
-				}
-				images.put(suit, cardImage);
-				cardImages.put(rank, images);
-			}
-			y++;
-		}
+                Map<Suit, Image> images = cardImages.get(rank);
+                if (images == null) {
+                    images = new HashMap<Suit, Image>();
+                }
+                images.put(suit, cardImage);
+                cardImages.put(rank, images);
+            }
+            y++;
+        }
 
-		backOfCardImage = bi.getSubimage(2 * cardWidth, 4 * cardHeight,
-				cardWidth, cardHeight);
-	}
+        backOfCardImage = bi.getSubimage(2 * cardWidth, 4 * cardHeight,
+                cardWidth, cardHeight);
+    }
 
-	public static CardImageManager getInstance() {
-		if (instance == null) {
-			return new CardImageManager();
-		}
+    public static CardImageManager getInstance() {
+        return instance;
+    }
 
-		return instance;
-	}
+    public Image getCardImage(Rank rank, Suit suit) {
+        return cardImages.get(rank).get(suit);
+    }
 
-	public Image getCardImage(Rank rank, Suit suit) {
-		return cardImages.get(rank).get(suit);
-	}
+    public Image getBackOfCardImage() {
+        return backOfCardImage;
+    }
 
-	public Image getBackOfCardImage() {
-		return backOfCardImage;
-	}
+    public int getCardWidth() {
+        return cardWidth;
+    }
 
-	public int getCardWidth() {
-		return cardWidth;
-	}
-
-	public int getCardHeight() {
-		return cardHeight;
-	}
+    public int getCardHeight() {
+        return cardHeight;
+    }
 }
