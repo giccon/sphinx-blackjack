@@ -10,3 +10,8 @@ for more information.
                                      License
 -------------------------------------------------------------------------------
 The source code is published under GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007.
+
+-------------------------------------------------------------------------------
+                       Running the program during development
+-------------------------------------------------------------------------------
+To start the program please run the main in class SphinxBlackjackGui.

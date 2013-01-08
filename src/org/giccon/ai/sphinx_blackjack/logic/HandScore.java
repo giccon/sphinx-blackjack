@@ -14,43 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.giccon.ai.sphinx_blackjack;
-
-import org.giccon.ai.sphinx_blackjack.card.Card;
+package org.giccon.ai.sphinx_blackjack.logic;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Paul Minasian
+ * Author: Paul Minasian
  */
-public abstract class Player {
+public class HandScore {
+    private List<Integer> possibleScores = new ArrayList<Integer>();
 
-    private List<Card> hand;
-
-    public Player() {
-        hand = new ArrayList<Card>();
-    }
-
-    public List<Card> getHand() {
-        return Collections.unmodifiableList(hand);
-    }
-
-    public void receiveCard(Card card) {
-        hand.add(card);
-    }
-
-    public void returnHand() {
-        hand.clear();
-    }
-
-    public int getScore() {
-
-        return 0;
-    }
-
-    public boolean hasBlackjackHand() {
-        return true;
+    public List<Integer> getPossibleScores() {
+        possibleScores.add(10);
+        return Collections.unmodifiableList(possibleScores);
     }
 }

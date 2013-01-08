@@ -14,43 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.giccon.ai.sphinx_blackjack;
-
-import org.giccon.ai.sphinx_blackjack.card.Card;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+package org.giccon.ai.sphinx_blackjack.card;
 
 /**
- * @author Paul Minasian
+ * Author: Paul Minasian
  */
-public abstract class Player {
+public class DeckEmptyException extends RuntimeException {
 
-    private List<Card> hand;
-
-    public Player() {
-        hand = new ArrayList<Card>();
-    }
-
-    public List<Card> getHand() {
-        return Collections.unmodifiableList(hand);
-    }
-
-    public void receiveCard(Card card) {
-        hand.add(card);
-    }
-
-    public void returnHand() {
-        hand.clear();
-    }
-
-    public int getScore() {
-
-        return 0;
-    }
-
-    public boolean hasBlackjackHand() {
-        return true;
+    public DeckEmptyException(String message) {
+        super(message);
     }
 }

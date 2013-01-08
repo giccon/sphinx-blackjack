@@ -1,24 +1,24 @@
-/**
- *  This file is part of Sphinx Blackjack.
+/*
+ * This file is part of Sphinx Blackjack.
  *
- *  Sphinx Blackjack is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Sphinx Blackjack is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Sphinx Blackjack is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Sphinx Blackjack is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.giccon.ai.sphinx_blackjack.gui;
 
-import org.giccon.ai.sphinx_blackjack.GameManager;
 import org.giccon.ai.sphinx_blackjack.Player;
 import org.giccon.ai.sphinx_blackjack.card.CardImageManager;
+import org.giccon.ai.sphinx_blackjack.logic.GameManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +31,15 @@ import java.awt.*;
 public class SphinxBlackjackGui {
 
     private JFrame frmSphinxBlackjack;
+
+    /**
+     * Create the application.
+     */
+    public SphinxBlackjackGui() {
+        initialize();
+
+        CardImageManager.getInstance();
+    }
 
     /**
      * Launch the application.
@@ -46,15 +55,6 @@ public class SphinxBlackjackGui {
                 }
             }
         });
-    }
-
-    /**
-     * Create the application.
-     */
-    public SphinxBlackjackGui() {
-        initialize();
-
-        CardImageManager.getInstance();
     }
 
     /**
