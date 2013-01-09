@@ -27,7 +27,10 @@ public class HandScore {
     private List<Integer> possibleScores = new ArrayList<Integer>();
 
     public List<Integer> getPossibleScores() {
-        possibleScores.add(10);
         return Collections.unmodifiableList(possibleScores);
+    }
+
+    public void addScore(int score) {
+        possibleScores.add(score);
     }
 }

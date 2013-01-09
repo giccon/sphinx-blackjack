@@ -34,7 +34,7 @@ public class CardImageManager {
     private static final String IMAGE_PATH = ""
             + "org/giccon/ai/sphinx_blackjack/assets/images/cards.png";
 
-    private static final CardImageManager instance = new CardImageManager();
+    private static final CardImageManager INSTANCE = new CardImageManager();
 
     private Map<Rank, Map<Suit, Image>> cardImages;
     private Image backOfCardImage;
@@ -82,7 +82,7 @@ public class CardImageManager {
     }
 
     public static CardImageManager getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public Image getCardImage(Rank rank, Suit suit) {

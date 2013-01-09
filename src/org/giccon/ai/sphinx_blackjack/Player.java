@@ -17,6 +17,8 @@
 package org.giccon.ai.sphinx_blackjack;
 
 import org.giccon.ai.sphinx_blackjack.card.Card;
+import org.giccon.ai.sphinx_blackjack.logic.HandScore;
+import org.giccon.ai.sphinx_blackjack.logic.ScoreCalculator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +28,8 @@ import java.util.List;
  * @author Paul Minasian
  */
 public abstract class Player {
+
+    private static final ScoreCalculator scoreCalculator = new ScoreCalculator();
 
     private List<Card> hand;
 
@@ -45,9 +49,8 @@ public abstract class Player {
         hand.clear();
     }
 
-    public int getScore() {
-
-        return 0;
+    public HandScore getScore() {
+        return scoreCalculator.calculateScore(hand);
     }
 
     public boolean hasBlackjackHand() {

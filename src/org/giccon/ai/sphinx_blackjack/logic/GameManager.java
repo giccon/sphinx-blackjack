@@ -18,20 +18,15 @@ package org.giccon.ai.sphinx_blackjack.logic;
 
 import org.giccon.ai.sphinx_blackjack.Dealer;
 import org.giccon.ai.sphinx_blackjack.Human;
-import org.giccon.ai.sphinx_blackjack.card.Card;
 import org.giccon.ai.sphinx_blackjack.card.Deck;
 import org.giccon.ai.sphinx_blackjack.card.StandardDeck;
-
-import java.util.List;
 
 /**
  * Author: Paul Minasian
  */
 public class GameManager {
 
-    private static final GameManager instance = new GameManager();
-
-    private ScoreCalculator scoreCalculator = new ScoreCalculator();
+    private static final GameManager INSTANCE = new GameManager();
 
     private Deck deck = new StandardDeck();
 
@@ -54,7 +49,7 @@ public class GameManager {
     }
 
     public static GameManager getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public Dealer getDealer() {
@@ -67,9 +62,5 @@ public class GameManager {
 
     public int getNumberOfCardsLeft() {
         return deck.getNumberOfCards();
-    }
-
-    public HandScore getHandScore(List<Card> hand) {
-        return scoreCalculator.calculateScore();
     }
 }
