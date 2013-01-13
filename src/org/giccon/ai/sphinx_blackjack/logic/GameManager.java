@@ -20,13 +20,23 @@ import org.giccon.ai.sphinx_blackjack.Dealer;
 import org.giccon.ai.sphinx_blackjack.Human;
 import org.giccon.ai.sphinx_blackjack.card.Deck;
 import org.giccon.ai.sphinx_blackjack.card.StandardDeck;
+import org.giccon.ai.sphinx_blackjack.logic.gamestate.*;
+
+import java.util.Observable;
 
 /**
  * Author: Paul Minasian
  */
-public class GameManager {
+public class GameManager extends Observable {
 
     private static final GameManager INSTANCE = new GameManager();
+
+    private final GameState gameIdleState = new GameIdleState();
+    private final GameState humanPlayingState = new HumanPlayingState();
+    private final GameState dealerPlayingState = new DealerPlayingState();
+    private final GameState gameRoundEndState = new GameRoundEndState();
+    private final GameState gameOverState = new GameOverState();
+    private GameState gameState;
 
     private Deck deck = new StandardDeck();
 
@@ -46,6 +56,10 @@ public class GameManager {
                 dealer.receiveCard(deck.dealCard());
             }
         }
+
+        // Game enters the game idle state.
+        gameState = new GameIdleState();
+        notifyObservers(GameStateChanged.GAME_IDLE_STATE);
     }
 
     public static GameManager getInstance() {

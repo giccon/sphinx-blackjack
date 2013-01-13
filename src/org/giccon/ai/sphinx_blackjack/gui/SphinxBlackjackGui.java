@@ -68,9 +68,11 @@ public class SphinxBlackjackGui {
         frmSphinxBlackjack.setBounds(100, 100, 450, 300);
         frmSphinxBlackjack.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        Player dealer = GameManager.getInstance().getDealer();
-        Player human = GameManager.getInstance().getHuman();
+        GameManager gm = GameManager.getInstance();
+        Player dealer = gm.getDealer();
+        Player human = gm.getHuman();
         CardDrawPanel pnlCard = new CardDrawPanel(dealer, human);
+        gm.notifyObservers();
         frmSphinxBlackjack.getContentPane().add(pnlCard, BorderLayout.CENTER);
     }
 }

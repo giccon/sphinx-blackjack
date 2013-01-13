@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ This file is part of Sphinx Blackjack.
+  ~
+  ~ Sphinx Blackjack is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Sphinx Blackjack is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!-- ********************************************************** -->
+<!-- *                                                        * -->
+<!-- * Apache Ant build file used to build the Sphinx-4 demos.* -->
+<!-- * To build the demos, just type the following:           * -->
+<!-- *                                                        * -->
+<!-- *     ant -buildfile build.xml                           * -->
+<!-- *                                                        * -->
+<!-- * For more information:  http://ant.apache.org/          * -->
+<!-- *                                                        * -->
+<!-- ********************************************************** -->
+
+<project basedir="." default="all" name="Sphinx Blackjack">
+
+    <!-- ********************************************************** -->
+    <!-- *                                                        * -->
+    <!-- * Where to find things...                                * -->
+    <!-- *                                                        * -->
+    <!-- ********************************************************** -->
+
+    <property name="version" value="1_2_0"/>
+    <property name="src_dir" value="src"/>
+    <property name="build_dir" value="bld"/>
+    <property name="classes_dir" value="${build_dir}"/>
+    <property name="lib_dir" value="lib"/>
+    <property name="bin_dir" value="bin"/>
+    <property name="deploy_dir" value="deploy"/>
+    <property name="build_model_dir" value="${classes_dir}"/>
+
+    <property name="wsj_name" value="WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz"/>
+    <property name="wsj_data_dir" value="models/acoustic/wsj"/>
+
+    <path id="libs">
+        <pathelement path="${classes_dir}"/>
+        <pathelement location="${lib_dir}/sphinx4.jar"/>
+    </path>
+
+    <target name="compile_sphinx-blackjack"
+            depends="create_all_models">
+        <mkdir dir="${classes_dir}/org/giccon/ai/sphinx_blackjack/speech/"/>
+        <javac debug="true"
+               listfiles="true"
+               deprecation="true"
+               includeAntRuntime="false"
+               srcdir="${src_dir}"
+               destdir="${classes_dir}"
+               includes="org/giccon/ai/sphinx_blackjack/speech/**">
+            <classpath refid="libs"/>
+        </javac>
+        <copy file="${src_dir}/org/giccon/ai/sphinx_blackjack/speech/hello.gram"
+              todir="${classes_dir}/org/giccon/ai/sphinx_blackjack/speech"/>
+        <copy file="${src_dir}/org/giccon/ai/sphinx_blackjack/speech/helloworld.config.xml"
+              todir="${classes_dir}/org/giccon/ai/sphinx_blackjack/speech/"/>
+        <mkdir dir="${bin_dir}"/>
+        <jar destfile="${bin_dir}/Sphinx-Blackjack.jar"
+             manifest="${src_dir}/org/giccon/ai/sphinx_blackjack/speech/helloworld.Manifest"
+             basedir="${classes_dir}"
+             includes="org/giccon/ai/sphinx_blackjack/speech/**"
+             compress="true"/>
+    </target>
+
+    <!-- ********************************************************** -->
+    <!-- *                                                        * -->
+    <!-- * Builds just the demos (using package names for the     * -->
+    <!-- * demos would have made this easier).                    * -->
+    <!-- *                                                        * -->
+    <!-- ********************************************************** -->
+    <target name="all"
+            depends="compile_sphinx-blackjack"
+            description="Compiles and jars the Sphinx Blackjack application"/>
+
+    <target name="create_all_models"
+            description="Creates the WSJ acoustic model JARS.">
+        <antcall target="create_my_model">
+            <param name="my_model_data_dir" value="${wsj_data_dir}"/>
+            <param name="my_model_name" value="${wsj_name}"/>
+        </antcall>
+    </target>
+
+    <!-- ********************************************************** -->
+    <!-- *                                                        * -->
+    <!-- * Builds an acoustic model JAR.                          * -->
+    <!-- * params: 'my_model_name' and 'my_model_data_dir'        * -->
+    <!-- * 1) Copies everything in 'my_model_data_dir' to         * -->
+    <!-- *    ${build_model_dir}/${my_model_name}.                * -->
+    <!-- * 2) Jars up the ${build_model_dir}/${my_model_name} dir * -->
+    <!-- *                                                        * -->
+    <!-- ********************************************************** -->
+    <target name="create_my_model"
+            description="Creates an acoustic model JAR.">
+
+        <copy todir="${build_model_dir}/${my_model_name}">
+            <fileset dir="speech/${my_model_data_dir}"/>
+        </copy>
+
+        <jar destfile="${lib_dir}/${my_model_name}.jar">
+            <fileset dir="${build_dir}"
+                     includes="${my_model_name}/**"/>
+        </jar>
+    </target>
+</project>

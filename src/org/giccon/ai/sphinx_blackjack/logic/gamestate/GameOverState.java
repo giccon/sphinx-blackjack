@@ -20,5 +20,5 @@ package org.giccon.ai.sphinx_blackjack.logic.gamestate;
 /**
  * Author: Paul Minasian
  */
-public class GameOverState {
+public class GameOverState extends GameState {
 }

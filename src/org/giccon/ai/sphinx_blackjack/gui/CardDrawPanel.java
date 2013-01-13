@@ -28,7 +28,7 @@ import java.awt.*;
 public class CardDrawPanel extends JPanel {
 
     private static final long serialVersionUID = -4534795109399774313L;
-    private Renderer renderer;
+    private final Renderer renderer;
 
     public CardDrawPanel(Player dealer, Player human) {
         setPreferredSize(new Dimension(800, 600));
