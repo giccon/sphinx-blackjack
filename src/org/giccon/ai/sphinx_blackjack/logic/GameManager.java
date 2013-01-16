@@ -16,10 +16,8 @@
  */
 package org.giccon.ai.sphinx_blackjack.logic;
 
-import org.giccon.ai.sphinx_blackjack.Dealer;
-import org.giccon.ai.sphinx_blackjack.Human;
-import org.giccon.ai.sphinx_blackjack.card.Deck;
-import org.giccon.ai.sphinx_blackjack.card.StandardDeck;
+import org.giccon.ai.sphinx_blackjack.logic.card.Deck;
+import org.giccon.ai.sphinx_blackjack.logic.card.StandardDeck;
 import org.giccon.ai.sphinx_blackjack.logic.gamestate.*;
 import org.giccon.ai.sphinx_blackjack.speech.SpeechRecognitionException;
 import org.giccon.ai.sphinx_blackjack.speech.SpeechRecognitionManager;

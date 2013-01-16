@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.giccon.ai.sphinx_blackjack;
+package org.giccon.ai.sphinx_blackjack.logic;
 
-import org.giccon.ai.sphinx_blackjack.card.Card;
-import org.giccon.ai.sphinx_blackjack.logic.HandScore;
-import org.giccon.ai.sphinx_blackjack.logic.ScoreCalculator;
+import org.giccon.ai.sphinx_blackjack.logic.card.Card;
 
 import java.util.ArrayList;
 import java.util.Collections;

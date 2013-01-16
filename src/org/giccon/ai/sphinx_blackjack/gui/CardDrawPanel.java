@@ -16,7 +16,7 @@
  */
 package org.giccon.ai.sphinx_blackjack.gui;
 
-import org.giccon.ai.sphinx_blackjack.Player;
+import org.giccon.ai.sphinx_blackjack.logic.Player;
 import org.giccon.ai.sphinx_blackjack.rendering.Renderer;
 
 import javax.swing.*;

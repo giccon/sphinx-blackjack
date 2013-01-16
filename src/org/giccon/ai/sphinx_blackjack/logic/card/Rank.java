@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.giccon.ai.sphinx_blackjack.card;
+package org.giccon.ai.sphinx_blackjack.logic.card;
 
 /**
  * @author Paul Minasian
  */
-public enum Suit {
-    SPADES, DIAMONDS, HEARTS, CLUBS
+public enum Rank {
+    ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING
 }

@@ -14,40 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.giccon.ai.sphinx_blackjack.card;
+package org.giccon.ai.sphinx_blackjack.logic.card;
 
 import java.awt.*;
 
 /**
  * @author Paul Minasian
  */
-public class Card {
+public class StandardDeck extends Deck {
 
-    private Rank rank;
-
-    private Suit suit;
-
-    private Image img;
-
-    public Card(Rank rank, Suit suit, Image img) {
-        this.rank = rank;
-        this.suit = suit;
-        this.img = img;
+    public StandardDeck() {
+        initActiveStack();
+        shuffle();
     }
 
-    public Rank getRank() {
-        return rank;
-    }
-
-    public Suit getSuit() {
-        return suit;
-    }
-
-    public Image getImg() {
-        return img;
-    }
-
-    public boolean isAce() {
-        return rank.equals(Rank.ACE);
+    private void initActiveStack() {
+        CardImageManager cim = CardImageManager.getInstance();
+        for (Rank rank : Rank.values()) {
+            for (Suit suit : Suit.values()) {
+                Image img = cim.getCardImage(rank, suit);
+                Card c = new Card(rank, suit, img);
+                activeStack.add(c);
+            }
+        }
     }
 }

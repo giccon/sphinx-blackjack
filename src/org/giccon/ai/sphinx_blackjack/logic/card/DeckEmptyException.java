@@ -14,11 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.giccon.ai.sphinx_blackjack;
+package org.giccon.ai.sphinx_blackjack.logic.card;
 
 /**
- * @author Paul Minasian
+ * Author: Paul Minasian
  */
-public class Human extends Player {
+public class DeckEmptyException extends RuntimeException {
 
+    public DeckEmptyException(String message) {
+        super(message);
+    }
 }

@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.giccon.ai.sphinx_blackjack;
+package org.giccon.ai.sphinx_blackjack.logic;
 
 /**
  * @author Paul Minasian
  */
-public class Dealer extends Player {
+public class Human extends Player {
 
 }

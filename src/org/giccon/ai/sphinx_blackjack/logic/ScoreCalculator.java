@@ -17,8 +17,8 @@
 
 package org.giccon.ai.sphinx_blackjack.logic;
 
-import org.giccon.ai.sphinx_blackjack.card.Card;
-import org.giccon.ai.sphinx_blackjack.card.Rank;
+import org.giccon.ai.sphinx_blackjack.logic.card.Card;
+import org.giccon.ai.sphinx_blackjack.logic.card.Rank;
 
 import java.util.HashMap;
 import java.util.List;

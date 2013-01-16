@@ -17,11 +17,11 @@
 
 package org.giccon.ai.sphinx_blackjack.rendering;
 
-import org.giccon.ai.sphinx_blackjack.Player;
-import org.giccon.ai.sphinx_blackjack.card.Card;
-import org.giccon.ai.sphinx_blackjack.card.CardImageManager;
 import org.giccon.ai.sphinx_blackjack.logic.GameManager;
 import org.giccon.ai.sphinx_blackjack.logic.HandScore;
+import org.giccon.ai.sphinx_blackjack.logic.Player;
+import org.giccon.ai.sphinx_blackjack.logic.card.Card;
+import org.giccon.ai.sphinx_blackjack.logic.card.CardImageManager;
 
 import javax.swing.*;
 import java.awt.*;

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.giccon.ai.sphinx_blackjack.card;
+package org.giccon.ai.sphinx_blackjack.logic.card;
 
 import org.giccon.ai.sphinx_blackjack.exception.SystemFaultException;
 
