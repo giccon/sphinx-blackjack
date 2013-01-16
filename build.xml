@@ -42,78 +42,40 @@
     <property name="classes_dir" value="${build_dir}"/>
     <property name="lib_dir" value="lib"/>
     <property name="bin_dir" value="bin"/>
-    <property name="deploy_dir" value="deploy"/>
-    <property name="build_model_dir" value="${classes_dir}"/>
-
-    <property name="wsj_name" value="WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz"/>
-    <property name="wsj_data_dir" value="models/acoustic/wsj"/>
 
     <path id="libs">
         <pathelement path="${classes_dir}"/>
         <pathelement location="${lib_dir}/sphinx4.jar"/>
     </path>
 
-    <target name="compile_sphinx-blackjack"
-            depends="create_all_models">
-        <mkdir dir="${classes_dir}/org/giccon/ai/sphinx_blackjack/speech/"/>
+    <target name="compile_sphinx-blackjack">
+        <mkdir dir="${classes_dir}/org/giccon/ai/sphinx_blackjack/"/>
         <javac debug="true"
                listfiles="true"
                deprecation="true"
                includeAntRuntime="false"
                srcdir="${src_dir}"
                destdir="${classes_dir}"
-               includes="org/giccon/ai/sphinx_blackjack/speech/**">
+               includes="org/giccon/ai/sphinx_blackjack/**">
             <classpath refid="libs"/>
         </javac>
-        <copy file="${src_dir}/org/giccon/ai/sphinx_blackjack/speech/hello.gram"
-              todir="${classes_dir}/org/giccon/ai/sphinx_blackjack/speech"/>
-        <copy file="${src_dir}/org/giccon/ai/sphinx_blackjack/speech/helloworld.config.xml"
-              todir="${classes_dir}/org/giccon/ai/sphinx_blackjack/speech/"/>
+        <copy todir="${classes_dir}/org/giccon/ai/sphinx_blackjack/assets/">
+            <fileset dir="src/org/giccon/ai/sphinx_blackjack/assets/"/>
+        </copy>
         <mkdir dir="${bin_dir}"/>
+
+        <unjar src="lib/sphinx4.jar" dest="${classes_dir}/"/>
+        <unjar src="lib/WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz.jar" dest="${classes_dir}/"/>
+
         <jar destfile="${bin_dir}/Sphinx-Blackjack.jar"
-             manifest="${src_dir}/org/giccon/ai/sphinx_blackjack/speech/helloworld.Manifest"
+             manifest="src/org/giccon/ai/sphinx_blackjack/spinx_blackjack.manifest"
              basedir="${classes_dir}"
-             includes="org/giccon/ai/sphinx_blackjack/speech/**"
+             includes="**"
              compress="true"/>
     </target>
 
-    <!-- ********************************************************** -->
-    <!-- *                                                        * -->
-    <!-- * Builds just the demos (using package names for the     * -->
-    <!-- * demos would have made this easier).                    * -->
-    <!-- *                                                        * -->
-    <!-- ********************************************************** -->
     <target name="all"
             depends="compile_sphinx-blackjack"
             description="Compiles and jars the Sphinx Blackjack application"/>
 
-    <target name="create_all_models"
-            description="Creates the WSJ acoustic model JARS.">
-        <antcall target="create_my_model">
-            <param name="my_model_data_dir" value="${wsj_data_dir}"/>
-            <param name="my_model_name" value="${wsj_name}"/>
-        </antcall>
-    </target>
-
-    <!-- ********************************************************** -->
-    <!-- *                                                        * -->
-    <!-- * Builds an acoustic model JAR.                          * -->
-    <!-- * params: 'my_model_name' and 'my_model_data_dir'        * -->
-    <!-- * 1) Copies everything in 'my_model_data_dir' to         * -->
-    <!-- *    ${build_model_dir}/${my_model_name}.                * -->
-    <!-- * 2) Jars up the ${build_model_dir}/${my_model_name} dir * -->
-    <!-- *                                                        * -->
-    <!-- ********************************************************** -->
-    <target name="create_my_model"
-            description="Creates an acoustic model JAR.">
-
-        <copy todir="${build_model_dir}/${my_model_name}">
-            <fileset dir="speech/${my_model_data_dir}"/>
-        </copy>
-
-        <jar destfile="${lib_dir}/${my_model_name}.jar">
-            <fileset dir="${build_dir}"
-                     includes="${my_model_name}/**"/>
-        </jar>
-    </target>
 </project>

@@ -1,0 +1,29 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for Hello World example
+ */
+
+grammar sphinx-blackjack;
+
+public <commands> = correct | wrong
+| plus one
+| plus five
+| plus ten
+| plus twenty five
+| plus fifty
+| plus hundred
+| minus one
+| minus five
+| minus ten
+| minus twenty five
+| minus fifty
+| minus hundred
+| deal
+| hit
+| stand
+| double
+| split
+| restart
+| help
+;

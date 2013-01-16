@@ -21,6 +21,8 @@ import org.giccon.ai.sphinx_blackjack.Human;
 import org.giccon.ai.sphinx_blackjack.card.Deck;
 import org.giccon.ai.sphinx_blackjack.card.StandardDeck;
 import org.giccon.ai.sphinx_blackjack.logic.gamestate.*;
+import org.giccon.ai.sphinx_blackjack.speech.SpeechRecognitionException;
+import org.giccon.ai.sphinx_blackjack.speech.SpeechRecognitionManager;
 
 import java.util.Observable;
 
@@ -60,6 +62,13 @@ public class GameManager extends Observable {
         // Game enters the game idle state.
         gameState = new GameIdleState();
         notifyObservers(GameStateChanged.GAME_IDLE_STATE);
+
+        try {
+            SpeechRecognitionManager.getInstance().initSpeechRecognitionEngine();
+            SpeechRecognitionManager.getInstance().startSpeechRecognitionEngine();
+        } catch (SpeechRecognitionException e) {
+
+        }
     }
 
     public static GameManager getInstance() {
