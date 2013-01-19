@@ -30,6 +30,7 @@ import java.util.Observer;
  * Author: Paul Minasian
  */
 public class Renderer implements Observer {
+    private final JPanel canvas;
     private final RenderState gameIdleState;
     private final RenderState humanPlayingState;
     private final RenderState dealerPlayingState;
@@ -38,6 +39,7 @@ public class Renderer implements Observer {
     private RenderState renderState;
 
     public Renderer(JPanel canvas, Player dealer, Player human) {
+        this.canvas = canvas;
         gameIdleState = new GameIdleState(canvas, dealer, human);
         humanPlayingState = new HumanPlayingState(canvas, dealer, human);
         dealerPlayingState = new DealerPlayingState(canvas, dealer, human);
@@ -55,8 +57,12 @@ public class Renderer implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof GameManager) {
+            if (arg == null) {
+                canvas.repaint();
+            }
             if (arg instanceof GameStateChanged) {
                 setRenderState((GameStateChanged) arg);
+                canvas.repaint();
             }
         }
     }

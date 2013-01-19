@@ -17,8 +17,33 @@
 
 package org.giccon.ai.sphinx_blackjack.logic.gamestate;
 
+import org.giccon.ai.sphinx_blackjack.logic.Dealer;
+import org.giccon.ai.sphinx_blackjack.logic.GameManager;
+import org.giccon.ai.sphinx_blackjack.logic.Human;
+import org.giccon.ai.sphinx_blackjack.logic.card.Deck;
+
 /**
  * Author: Paul Minasian
  */
 public class GameIdleState extends GameState {
+    public GameIdleState(GameManager gm, Deck deck, Dealer dealer, Human human) {
+        super(gm, deck, dealer, human);
+    }
+
+    @Override
+    public void deal() {
+        // 1st card
+        dealCardToPlayer(human);
+        // 2nd card
+        dealCardToPlayer(human);
+
+        // 1st card
+        dealCardToPlayer(dealer);
+        // 2nd card
+        dealCardToPlayer(dealer);
+
+
+        gm.setGameState(gm.getHumanPlayingState());
+        gm.fireStateChange(GameStateChanged.HUMAN_PLAYING_STATE);
+    }
 }

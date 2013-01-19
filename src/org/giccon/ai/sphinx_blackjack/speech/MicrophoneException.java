@@ -15,18 +15,14 @@
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.giccon.ai.sphinx_blackjack.logic.gamestate;
-
-import org.giccon.ai.sphinx_blackjack.logic.Dealer;
-import org.giccon.ai.sphinx_blackjack.logic.GameManager;
-import org.giccon.ai.sphinx_blackjack.logic.Human;
-import org.giccon.ai.sphinx_blackjack.logic.card.Deck;
+package org.giccon.ai.sphinx_blackjack.speech;
 
 /**
  * Author: Paul Minasian
  */
-public class DealerPlayingState extends GameState {
-    public DealerPlayingState(GameManager gm, Deck deck, Dealer dealer, Human human) {
-        super(gm, deck, dealer, human);
+public class MicrophoneException extends Exception {
+
+    public MicrophoneException(String message) {
+        super(message);
     }
 }

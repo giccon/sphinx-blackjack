@@ -36,6 +36,7 @@ public class SphinxBlackjackGui {
      * Create the application.
      */
     public SphinxBlackjackGui() {
+        Thread.currentThread().setName("SphinxBlackjackGui");
         initialize();
 
         CardImageManager.getInstance();

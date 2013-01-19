@@ -31,6 +31,7 @@ public class GameIdleState extends RenderState {
         super(canvas, dealer, human);
     }
 
+    @Override
     public void render(Graphics g) {
         drawDeckCards(g);
         drawCommandLegend(g);

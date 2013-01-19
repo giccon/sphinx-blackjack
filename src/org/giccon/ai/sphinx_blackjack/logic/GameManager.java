@@ -16,12 +16,19 @@
  */
 package org.giccon.ai.sphinx_blackjack.logic;
 
+import edu.cmu.sphinx.decoder.ResultListener;
+import edu.cmu.sphinx.result.Result;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
 import org.giccon.ai.sphinx_blackjack.logic.card.Deck;
 import org.giccon.ai.sphinx_blackjack.logic.card.StandardDeck;
 import org.giccon.ai.sphinx_blackjack.logic.gamestate.*;
+import org.giccon.ai.sphinx_blackjack.speech.MicrophoneException;
 import org.giccon.ai.sphinx_blackjack.speech.SpeechRecognitionException;
 import org.giccon.ai.sphinx_blackjack.speech.SpeechRecognitionManager;
+import org.giccon.ai.sphinx_blackjack.speech.VoiceCommand;
 
+import java.awt.*;
 import java.util.Observable;
 
 /**
@@ -30,42 +37,43 @@ import java.util.Observable;
 public class GameManager extends Observable {
 
     private static final GameManager INSTANCE = new GameManager();
-
-    private final GameState gameIdleState = new GameIdleState();
-    private final GameState humanPlayingState = new HumanPlayingState();
-    private final GameState dealerPlayingState = new DealerPlayingState();
-    private final GameState gameRoundEndState = new GameRoundEndState();
-    private final GameState gameOverState = new GameOverState();
+    private final GameState gameIdleState;
+    private final GameState humanPlayingState;
+    private final GameState dealerPlayingState;
+    private final GameState gameRoundEndState;
+    private final GameState gameOverState;
+    private final ResultListenerHandler resultListenerHandler;
+    private final SpeechRecognitionManager srm;
+    private final Deck deck;
+    private final Dealer dealer;
+    private final Human human;
     private GameState gameState;
 
-    private Deck deck = new StandardDeck();
-
-    private Dealer dealer = new Dealer();
-
-    private Human human = new Human();
-
     private GameManager() {
-        for (int i = 0; i < 10; i++) {
-            if (!deck.isEmpty()) {
-                human.receiveCard(deck.dealCard());
-            }
-        }
+        deck = new StandardDeck();
+        dealer = new Dealer();
+        human = new Human();
 
-        for (int i = 0; i < 2; i++) {
-            if (!deck.isEmpty()) {
-                dealer.receiveCard(deck.dealCard());
-            }
-        }
+        gameIdleState = new GameIdleState(this, deck, dealer, human);
+        humanPlayingState = new HumanPlayingState(this, deck, dealer, human);
+        dealerPlayingState = new DealerPlayingState(this, deck, dealer, human);
+        gameRoundEndState = new GameRoundEndState(this, deck, dealer, human);
+        gameOverState = new GameOverState(this, deck, dealer, human);
+        resultListenerHandler = new ResultListenerHandler();
+        srm = SpeechRecognitionManager.getInstance();
 
         // Game enters the game idle state.
-        gameState = new GameIdleState();
-        notifyObservers(GameStateChanged.GAME_IDLE_STATE);
+        gameState = gameIdleState;
+        fireStateChange(GameStateChanged.GAME_IDLE_STATE);
 
         try {
-            SpeechRecognitionManager.getInstance().initSpeechRecognitionEngine();
-            SpeechRecognitionManager.getInstance().startSpeechRecognitionEngine();
-        } catch (SpeechRecognitionException e) {
-
+            srm.initSpeechRecognitionEngine();
+            srm.startSpeechRecognitionEngine();
+            srm.addResultListener(resultListenerHandler);
+        } catch (SpeechRecognitionException ignore) {
+            // todo handle speech recognition exception
+        } catch (MicrophoneException ignore) {
+            // todo handle microphone exception
         }
     }
 
@@ -83,5 +91,83 @@ public class GameManager extends Observable {
 
     public int getNumberOfCardsLeft() {
         return deck.getNumberOfCards();
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public GameState getGameIdleState() {
+        return gameIdleState;
+    }
+
+    public GameState getHumanPlayingState() {
+        return humanPlayingState;
+    }
+
+    public GameState getDealerPlayingState() {
+        return dealerPlayingState;
+    }
+
+    public GameState getGameRoundEndState() {
+        return gameRoundEndState;
+    }
+
+    public GameState getGameOverState() {
+        return gameOverState;
+    }
+
+    public void handleVoiceCommand(VoiceCommand vc) {
+        switch (vc) {
+            case DEAL:
+                gameState.deal();
+                break;
+            case HIT:
+                gameState.hit();
+                break;
+            case STAND:
+                gameState.stand();
+                break;
+            case QUIT: {
+/*                try {
+                    srm.removeResultListener(resultListenerHandler);
+                    srm.stopSpeechRecognitionEngine();
+                    srm.shutdownSpeechRecognitionEngine();
+                } catch (SpeechRecognitionException ignore) {
+                    // ignore
+                }*/
+                break;
+            }
+            case UNRECOGNIZED:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void fireStateChange(GameStateChanged arg) {
+        setChanged();
+        notifyObservers(arg);
+    }
+
+    private class ResultListenerHandler implements ResultListener {
+        @Override
+        public void newResult(Result result) {
+            final String command = result.getBestFinalResultNoFiller();
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        handleVoiceCommand(VoiceCommand.getVoiceCommand(command));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void newProperties(PropertySheet ps) throws PropertyException {
+            // n/a
+        }
     }
 }

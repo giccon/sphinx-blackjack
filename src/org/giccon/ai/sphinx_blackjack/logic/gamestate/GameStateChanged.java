@@ -21,6 +21,9 @@ package org.giccon.ai.sphinx_blackjack.logic.gamestate;
  * Author: Paul Minasian
  */
 public enum GameStateChanged {
-    GAME_IDLE_STATE, HUMAN_PLAYING_STATE, DEALER_PLAYING_STATE,
-    GAME_ROUND_END_STATE, GAME_OVER_STATE
+    GAME_IDLE_STATE,
+    HUMAN_PLAYING_STATE,
+    DEALER_PLAYING_STATE,
+    GAME_ROUND_END_STATE,
+    GAME_OVER_STATE
 }

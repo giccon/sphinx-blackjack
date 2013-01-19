@@ -30,18 +30,18 @@ import java.awt.*;
  * Author: Paul Minasian
  */
 public class RenderState {
-    private static final int DECK_CARD_Y_COORD = 20;
-    private static final int DEALER_CARD_Y_COORD = 50;
-    private static final int HUMAN_CARD_Y_COORD = 250;
-    private static final int COMMAND_CARD_Y_COORD = 450;
-    private static final int CARD_VISIBILITY_WIDTH = 30;
-    private static final Font arial14 = new Font("Arial", Font.BOLD, 14);
-    private static final Font arial12 = new Font("Arial", Font.BOLD, 12);
-    private CardImageManager cim = CardImageManager.getInstance();
-    private GameManager gm = GameManager.getInstance();
-    private JPanel canvas;
-    private Player dealer;
-    private Player human;
+    protected static final int DECK_CARD_Y_COORD = 20;
+    protected static final int DEALER_CARD_Y_COORD = 50;
+    protected static final int HUMAN_CARD_Y_COORD = 250;
+    protected static final int COMMAND_CARD_Y_COORD = 450;
+    protected static final int CARD_VISIBILITY_WIDTH = 30;
+    protected static final Font arial14 = new Font("Arial", Font.BOLD, 14);
+    protected static final Font arial12 = new Font("Arial", Font.BOLD, 12);
+    protected CardImageManager cim = CardImageManager.getInstance();
+    protected GameManager gm = GameManager.getInstance();
+    protected JPanel canvas;
+    protected Player dealer;
+    protected Player human;
 
     public RenderState(JPanel canvas, Player dealer, Player human) {
         this.canvas = canvas;
@@ -59,16 +59,15 @@ public class RenderState {
     protected void drawHumanCards(Graphics g) {
         java.util.List<Card> hand = human.getHand();
         drawCards(g, hand, HUMAN_CARD_Y_COORD, false);
-        int xCoord = calculateXCoordOfHand(hand);
-        drawScore(g, human.getScore(), xCoord + 40, HUMAN_CARD_Y_COORD + cim.getCardHeight() + 15);
+        int xCoord = canvas.getWidth() / 2 - 10;
+        drawScore(g, human.getScore(), xCoord, HUMAN_CARD_Y_COORD + cim.getCardHeight() + 15);
     }
 
     protected void drawDealerCards(Graphics g) {
         java.util.List<Card> hand = dealer.getHand();
-        boolean showFirstCardClosed = (hand.size() == 2);
-        drawCards(g, hand, DEALER_CARD_Y_COORD, showFirstCardClosed);
-        int xCoord = calculateXCoordOfHand(hand);
-        drawScore(g, dealer.getScore(), xCoord + 40, DEALER_CARD_Y_COORD + cim.getCardHeight() + 15);
+        drawCards(g, hand, DEALER_CARD_Y_COORD, true);
+        int xCoord = canvas.getWidth() / 2 - 10;
+        drawScore(g, dealer.getScore(), xCoord, DEALER_CARD_Y_COORD + cim.getCardHeight() + 15);
     }
 
     protected void drawDeckCards(Graphics g) {
@@ -109,7 +108,7 @@ public class RenderState {
         }
     }
 
-    private int calculateXCoordOfHand(java.util.List<Card> hand) {
+    protected int calculateXCoordOfHand(java.util.List<Card> hand) {
         int cardWidth = cim.getCardWidth();
 
         int adjustment = (cardWidth - CARD_VISIBILITY_WIDTH) / 2;
@@ -117,7 +116,7 @@ public class RenderState {
         return (canvas.getWidth() / 2) - (CARD_VISIBILITY_WIDTH * hand.size() / 2) - adjustment;
     }
 
-    private void drawScore(Graphics g, HandScore handScore, int xCoord, int yCoord) {
+    protected void drawScore(Graphics g, HandScore handScore, int xCoord, int yCoord) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
 

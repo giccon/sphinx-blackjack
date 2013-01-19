@@ -26,4 +26,5 @@ public <commands> = correct | wrong
 | split
 | restart
 | help
+| quit
 ;

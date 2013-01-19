@@ -17,6 +17,7 @@
 
 package org.giccon.ai.sphinx_blackjack.speech;
 
+import edu.cmu.sphinx.decoder.ResultListener;
 import edu.cmu.sphinx.frontend.util.Microphone;
 import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
@@ -30,55 +31,116 @@ public class SpeechRecognitionManager {
     private static final String SPEECH_CONFIG_PATH = ""
             + "org/giccon/ai/sphinx_blackjack/assets/speech/speech_recognition.config.xml";
     private static final SpeechRecognitionManager instance = new SpeechRecognitionManager();
+    private final ConfigurationManager config_manager;
     private Recognizer recognizer;
+    private Microphone microphone;
     private SpeechRecognitionLoop speechRecognitionLoop;
+    private volatile boolean runSpeechRecognitionEngine;
+    private State state = State.DEINITIALIZED;
 
     private SpeechRecognitionManager() {
-        speechRecognitionLoop = new SpeechRecognitionLoop();
+        config_manager = new ConfigurationManager(ClassLoader.getSystemResource(SPEECH_CONFIG_PATH));
+        recognizer = (Recognizer) config_manager.lookup("recognizer");
+        microphone = (Microphone) config_manager.lookup("microphone");
     }
 
     public synchronized static SpeechRecognitionManager getInstance() {
         return instance;
     }
 
-    public synchronized void initSpeechRecognitionEngine() throws SpeechRecognitionException {
-        ConfigurationManager cm =
-                new ConfigurationManager(ClassLoader.getSystemResource(SPEECH_CONFIG_PATH));
+    public synchronized void initSpeechRecognitionEngine() throws SpeechRecognitionException, MicrophoneException {
+        if (state != State.DEINITIALIZED) {
+            throw new SpeechRecognitionException("Speech Recognition Engine must be in deinitialized state");
+        }
 
-        recognizer = (Recognizer) cm.lookup("recognizer");
         recognizer.allocate();
 
-        Microphone microphone = (Microphone) cm.lookup("microphone");
         if (!microphone.startRecording()) {
             recognizer.deallocate();
-            throw new SpeechRecognitionException("Cannot start microphone");
+            System.out.println("Cannot start the microphone");
+            throw new MicrophoneException("Cannot start the microphone");
         }
+        state = State.INITIALIZED;
+    }
+
+    public synchronized void shutdownSpeechRecognitionEngine() throws SpeechRecognitionException {
+        if (state != State.INITIALIZED && state != State.STOPPED) {
+            throw new SpeechRecognitionException("Speech Recognition Engine must be in initialized or stopped state");
+        }
+
+        microphone.stopRecording();
+        recognizer.deallocate();
+        speechRecognitionLoop = null;
+
+        state = State.DEINITIALIZED;
+        System.out.println("shutdownSpeechRecognitionEngine");
     }
 
     public synchronized void startSpeechRecognitionEngine() throws SpeechRecognitionException {
-        if (recognizer == null) {
-            throw new SpeechRecognitionException("Speech Recognition Engine must be initialised first");
+        if (state != State.INITIALIZED && state != State.STOPPED) {
+            throw new SpeechRecognitionException("Speech Recognition Engine must be in initialised or stopped state");
         }
+
+        runSpeechRecognitionEngine = true;
+        speechRecognitionLoop = new SpeechRecognitionLoop();
+        speechRecognitionLoop.setName("Speech Recognition Loop");
         speechRecognitionLoop.start();
+        state = State.STARTED;
     }
 
-    public synchronized Recognizer getRecognizer() {
-        return recognizer;
+    public synchronized void stopSpeechRecognitionEngine() throws SpeechRecognitionException {
+        if (state != State.STARTED) {
+            throw new SpeechRecognitionException("Speech Recognition Engine must be in started state");
+        }
+
+        runSpeechRecognitionEngine = false;
+        while (speechRecognitionLoop.isAlive()) {
+            try {
+                speechRecognitionLoop.join();
+                System.out.println("Waiting...");
+            } catch (InterruptedException ignore) {
+                // ignore
+            }
+        }
+
+        state = State.STOPPED;
+        System.out.println("stopSpeechRecognitionEngine");
+
+    }
+
+    public void addResultListener(ResultListener resultListener) throws SpeechRecognitionException {
+        synchronized (recognizer) {
+            recognizer.addResultListener(resultListener);
+        }
+        System.out.println("addResultListener");
+    }
+
+    public void removeResultListener(ResultListener resultListener) throws SpeechRecognitionException {
+        synchronized (recognizer) {
+            recognizer.removeResultListener(resultListener);
+        }
+        System.out.println("removeResultListener");
+    }
+
+    private static enum State {
+        INITIALIZED, STARTED, STOPPED, DEINITIALIZED
     }
 
     private class SpeechRecognitionLoop extends Thread {
         @Override
         public void run() {
-            while (true) {
-                Result result = getRecognizer().recognize();
+            while (runSpeechRecognitionEngine) {
+                Result result;
+                synchronized (recognizer) {
+                    result = recognizer.recognize();
+                }
 
                 if (result != null) {
                     String resultText = result.getBestFinalResultNoFiller();
                     System.out.println("You said: " + resultText + "\n");
-                } else {
-                    System.out.println("I can't hear what you said.\n");
                 }
             }
+            System.out.println("Out of while loop");
         }
     }
 }
