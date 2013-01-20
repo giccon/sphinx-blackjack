@@ -19,6 +19,7 @@ package org.giccon.ai.sphinx_blackjack.logic.gamestate;
 
 import org.giccon.ai.sphinx_blackjack.logic.Dealer;
 import org.giccon.ai.sphinx_blackjack.logic.GameManager;
+import org.giccon.ai.sphinx_blackjack.logic.HandScore;
 import org.giccon.ai.sphinx_blackjack.logic.Human;
 import org.giccon.ai.sphinx_blackjack.logic.card.Deck;
 
@@ -34,12 +35,34 @@ public class HumanPlayingState extends GameState {
     @Override
     public void hit() {
         dealCardToPlayer(human);
-        gm.fireStateChange(null);
+
+        if (human.hasHandScoreOf21()) {
+            gm.setGameState(gm.getDealerPlayingState());
+            gm.fireStateChange(GameStateChanged.DEALER_PLAYING_STATE);
+            gm.getGameState().playDealer();
+            return;
+        }
+
+        HandScore handScore = human.getScore();
+        int lowestScore = Integer.MAX_VALUE;
+        for (Integer score : handScore.getPossibleScores()) {
+            if (score < lowestScore) {
+                lowestScore = score;
+            }
+        }
+
+        if (lowestScore > 21) {
+            gm.setGameState(gm.getGameRoundEndState());
+            gm.fireStateChange(GameStateChanged.GAME_ROUND_END_STATE);
+        } else {
+            gm.fireStateChange(null);
+        }
     }
 
     @Override
     public void stand() {
         gm.setGameState(gm.getDealerPlayingState());
         gm.fireStateChange(GameStateChanged.DEALER_PLAYING_STATE);
+        gm.getGameState().playDealer();
     }
 }

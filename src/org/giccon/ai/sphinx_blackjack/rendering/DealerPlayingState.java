@@ -18,7 +18,6 @@
 package org.giccon.ai.sphinx_blackjack.rendering;
 
 import org.giccon.ai.sphinx_blackjack.logic.Player;
-import org.giccon.ai.sphinx_blackjack.logic.card.Card;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,10 +31,12 @@ public class DealerPlayingState extends RenderState {
         super(canvas, dealer, human);
     }
 
-    protected void drawDealerCards(Graphics g) {
-        java.util.List<Card> hand = dealer.getHand();
-        drawCards(g, hand, DEALER_CARD_Y_COORD, false);
-        int xCoord = canvas.getWidth() / 2 - 10;
-        drawScore(g, dealer.getScore(), xCoord, DEALER_CARD_Y_COORD + cim.getCardHeight() + 15);
+    @Override
+    public void render(Graphics g) {
+        drawDeckCards(g);
+        drawDealerCards(g, false);
+        drawHumanCards(g);
+        drawCommandLegend(g);
+        drawPlayerCashInfo(g);
     }
 }

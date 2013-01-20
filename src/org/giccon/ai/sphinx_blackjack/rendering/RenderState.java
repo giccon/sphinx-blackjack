@@ -19,6 +19,7 @@ package org.giccon.ai.sphinx_blackjack.rendering;
 
 import org.giccon.ai.sphinx_blackjack.logic.GameManager;
 import org.giccon.ai.sphinx_blackjack.logic.HandScore;
+import org.giccon.ai.sphinx_blackjack.logic.Human;
 import org.giccon.ai.sphinx_blackjack.logic.Player;
 import org.giccon.ai.sphinx_blackjack.logic.card.Card;
 import org.giccon.ai.sphinx_blackjack.logic.card.CardImageManager;
@@ -34,6 +35,7 @@ public class RenderState {
     protected static final int DEALER_CARD_Y_COORD = 50;
     protected static final int HUMAN_CARD_Y_COORD = 250;
     protected static final int COMMAND_CARD_Y_COORD = 450;
+    protected static final int CASH_INFO_Y_COORD = 420;
     protected static final int CARD_VISIBILITY_WIDTH = 30;
     protected static final Font arial14 = new Font("Arial", Font.BOLD, 14);
     protected static final Font arial12 = new Font("Arial", Font.BOLD, 12);
@@ -51,9 +53,10 @@ public class RenderState {
 
     public void render(Graphics g) {
         drawDeckCards(g);
-        drawDealerCards(g);
+        drawDealerCards(g, true);
         drawHumanCards(g);
         drawCommandLegend(g);
+        drawPlayerCashInfo(g);
     }
 
     protected void drawHumanCards(Graphics g) {
@@ -63,9 +66,9 @@ public class RenderState {
         drawScore(g, human.getScore(), xCoord, HUMAN_CARD_Y_COORD + cim.getCardHeight() + 15);
     }
 
-    protected void drawDealerCards(Graphics g) {
+    protected void drawDealerCards(Graphics g, boolean showFirstCardClosed) {
         java.util.List<Card> hand = dealer.getHand();
-        drawCards(g, hand, DEALER_CARD_Y_COORD, true);
+        drawCards(g, hand, DEALER_CARD_Y_COORD, showFirstCardClosed);
         int xCoord = canvas.getWidth() / 2 - 10;
         drawScore(g, dealer.getScore(), xCoord, DEALER_CARD_Y_COORD + cim.getCardHeight() + 15);
     }
@@ -155,5 +158,12 @@ public class RenderState {
         g.setColor(Color.BLUE);
         g.drawString("restart | help", 10, COMMAND_CARD_Y_COORD + 100);
 
+    }
+
+    protected void drawPlayerCashInfo(Graphics g) {
+        Human h = (Human) human;
+        g.setColor(Color.BLACK);
+        g.drawString("Total: " + h.getCash(), 10, CASH_INFO_Y_COORD);
+        g.drawString("Bet: " + h.getBet(), canvas.getWidth() - 100, CASH_INFO_Y_COORD);
     }
 }

@@ -43,7 +43,7 @@ public abstract class Player {
         hand.add(card);
     }
 
-    public void returnHand() {
+    public void disposeHand() {
         hand.clear();
     }
 
@@ -53,5 +53,15 @@ public abstract class Player {
 
     public boolean hasBlackjackHand() {
         return true;
+    }
+
+    public boolean hasHandScoreOf21() {
+        HandScore handScore = getScore();
+        for (Integer score : handScore.getPossibleScores()) {
+            if (score == 21) {
+                return true;
+            }
+        }
+        return false;
     }
 }

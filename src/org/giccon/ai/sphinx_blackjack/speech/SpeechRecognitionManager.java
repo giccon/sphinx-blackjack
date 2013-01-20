@@ -57,7 +57,6 @@ public class SpeechRecognitionManager {
 
         if (!microphone.startRecording()) {
             recognizer.deallocate();
-            System.out.println("Cannot start the microphone");
             throw new MicrophoneException("Cannot start the microphone");
         }
         state = State.INITIALIZED;
@@ -73,7 +72,6 @@ public class SpeechRecognitionManager {
         speechRecognitionLoop = null;
 
         state = State.DEINITIALIZED;
-        System.out.println("shutdownSpeechRecognitionEngine");
     }
 
     public synchronized void startSpeechRecognitionEngine() throws SpeechRecognitionException {
@@ -97,29 +95,24 @@ public class SpeechRecognitionManager {
         while (speechRecognitionLoop.isAlive()) {
             try {
                 speechRecognitionLoop.join();
-                System.out.println("Waiting...");
             } catch (InterruptedException ignore) {
                 // ignore
             }
         }
 
         state = State.STOPPED;
-        System.out.println("stopSpeechRecognitionEngine");
-
     }
 
     public void addResultListener(ResultListener resultListener) throws SpeechRecognitionException {
         synchronized (recognizer) {
             recognizer.addResultListener(resultListener);
         }
-        System.out.println("addResultListener");
     }
 
     public void removeResultListener(ResultListener resultListener) throws SpeechRecognitionException {
         synchronized (recognizer) {
             recognizer.removeResultListener(resultListener);
         }
-        System.out.println("removeResultListener");
     }
 
     private static enum State {
@@ -132,15 +125,9 @@ public class SpeechRecognitionManager {
             while (runSpeechRecognitionEngine) {
                 Result result;
                 synchronized (recognizer) {
-                    result = recognizer.recognize();
-                }
-
-                if (result != null) {
-                    String resultText = result.getBestFinalResultNoFiller();
-                    System.out.println("You said: " + resultText + "\n");
+                    recognizer.recognize();
                 }
             }
-            System.out.println("Out of while loop");
         }
     }
 }

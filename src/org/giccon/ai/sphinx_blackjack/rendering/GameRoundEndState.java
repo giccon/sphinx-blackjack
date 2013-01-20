@@ -20,6 +20,7 @@ package org.giccon.ai.sphinx_blackjack.rendering;
 import org.giccon.ai.sphinx_blackjack.logic.Player;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Author: Paul Minasian
@@ -28,5 +29,14 @@ public class GameRoundEndState extends RenderState {
 
     public GameRoundEndState(JPanel canvas, Player dealer, Player human) {
         super(canvas, dealer, human);
+    }
+
+    @Override
+    public void render(Graphics g) {
+        drawDeckCards(g);
+        drawDealerCards(g, false);
+        drawHumanCards(g);
+        drawCommandLegend(g);
+        drawPlayerCashInfo(g);
     }
 }

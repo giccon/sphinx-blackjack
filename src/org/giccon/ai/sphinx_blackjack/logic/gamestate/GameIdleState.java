@@ -32,18 +32,16 @@ public class GameIdleState extends GameState {
 
     @Override
     public void deal() {
-        // 1st card
-        dealCardToPlayer(human);
-        // 2nd card
-        dealCardToPlayer(human);
+        sharedDeal();
+    }
 
-        // 1st card
-        dealCardToPlayer(dealer);
-        // 2nd card
-        dealCardToPlayer(dealer);
+    @Override
+    public void addBet(int cashAmount) {
+        sharedAddBet(cashAmount);
+    }
 
-
-        gm.setGameState(gm.getHumanPlayingState());
-        gm.fireStateChange(GameStateChanged.HUMAN_PLAYING_STATE);
+    @Override
+    public void withdrawBet(int cashAmount) {
+        sharedWithdrawBet(cashAmount);
     }
 }

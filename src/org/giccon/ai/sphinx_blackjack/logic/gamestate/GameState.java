@@ -27,10 +27,10 @@ import org.giccon.ai.sphinx_blackjack.logic.card.Deck;
  * Author: Paul Minasian
  */
 public abstract class GameState {
-    protected GameManager gm;
     protected final Deck deck;
     protected final Dealer dealer;
     protected final Human human;
+    protected GameManager gm;
 
     public GameState(GameManager gm, Deck deck, Dealer dealer, Human human) {
         this.gm = gm;
@@ -43,11 +43,44 @@ public abstract class GameState {
     }
 
     public void hit() {
-
     }
 
     public void stand() {
+    }
 
+    public void playDealer() {
+    }
+
+    public void addBet(int cashAmount) {
+    }
+
+    public void withdrawBet(int cashAmount) {
+    }
+
+    protected void sharedAddBet(int cashAmount) {
+        human.addBet(cashAmount);
+        gm.fireStateChange(null);
+    }
+
+    protected void sharedWithdrawBet(int cashAmount) {
+        human.withdrawBet(cashAmount);
+        gm.fireStateChange(null);
+    }
+
+    protected void sharedDeal() {
+        // 1st card
+        dealCardToPlayer(human);
+        // 2nd card
+        dealCardToPlayer(human);
+
+        // 1st card
+        dealCardToPlayer(dealer);
+        // 2nd card
+        dealCardToPlayer(dealer);
+
+
+        gm.setGameState(gm.getHumanPlayingState());
+        gm.fireStateChange(GameStateChanged.HUMAN_PLAYING_STATE);
     }
 
     protected void dealCardToPlayer(Player player) {

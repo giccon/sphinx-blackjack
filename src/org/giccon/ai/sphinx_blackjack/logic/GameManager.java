@@ -93,6 +93,10 @@ public class GameManager extends Observable {
         return deck.getNumberOfCards();
     }
 
+    public GameState getGameState() {
+        return gameState;
+    }
+
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
@@ -127,6 +131,50 @@ public class GameManager extends Observable {
                 break;
             case STAND:
                 gameState.stand();
+                break;
+            case SPLIT:
+                break;
+            case DOUBLE:
+                break;
+            case PLUS_ONE:
+                gameState.addBet(1);
+                break;
+            case PLUS_FIVE:
+                gameState.addBet(5);
+                break;
+            case PLUS_TEN:
+                gameState.addBet(10);
+                break;
+            case PLUS_TWENTY_FIVE:
+                gameState.addBet(25);
+                break;
+            case PLUS_FIFTY:
+                gameState.addBet(50);
+                break;
+            case PLUS_HUNDRED:
+                gameState.addBet(100);
+                break;
+            case MINUS_ONE:
+                gameState.withdrawBet(1);
+                break;
+            case MINUS_FIVE:
+                gameState.withdrawBet(5);
+                break;
+            case MINUS_TEN:
+                gameState.withdrawBet(10);
+                break;
+            case MINUS_TWENTY_FIVE:
+                gameState.withdrawBet(25);
+                break;
+            case MINUS_FIFTY:
+                gameState.withdrawBet(50);
+                break;
+            case MINUS_HUNDRED:
+                gameState.withdrawBet(100);
+                break;
+            case RESTART:
+                break;
+            case HELP:
                 break;
             case QUIT: {
 /*                try {

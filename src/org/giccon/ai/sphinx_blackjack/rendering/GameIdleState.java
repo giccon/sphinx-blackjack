@@ -35,5 +35,6 @@ public class GameIdleState extends RenderState {
     public void render(Graphics g) {
         drawDeckCards(g);
         drawCommandLegend(g);
+        drawPlayerCashInfo(g);
     }
 }

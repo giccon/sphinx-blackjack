@@ -29,4 +29,21 @@ public class GameRoundEndState extends GameState {
     public GameRoundEndState(GameManager gm, Deck deck, Dealer dealer, Human human) {
         super(gm, deck, dealer, human);
     }
+
+    @Override
+    public void deal() {
+        dealer.disposeHand();
+        human.disposeHand();
+        sharedDeal();
+    }
+
+    @Override
+    public void addBet(int cashAmount) {
+        sharedAddBet(cashAmount);
+    }
+
+    @Override
+    public void withdrawBet(int cashAmount) {
+        sharedWithdrawBet(cashAmount);
+    }
 }
