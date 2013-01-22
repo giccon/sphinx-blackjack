@@ -17,6 +17,7 @@
 
 package org.giccon.ai.sphinx_blackjack.logic.gamestate;
 
+import org.giccon.ai.sphinx_blackjack.config.GlobalConfig;
 import org.giccon.ai.sphinx_blackjack.logic.Dealer;
 import org.giccon.ai.sphinx_blackjack.logic.GameManager;
 import org.giccon.ai.sphinx_blackjack.logic.Human;
@@ -25,11 +26,13 @@ import org.giccon.ai.sphinx_blackjack.logic.card.Deck;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * Author: Paul Minasian
  */
 public class DealerPlayingState extends GameState implements ActionListener {
+    private static final int DEALER_STAND_SCORE = GlobalConfig.getDealerStandScore();
     private Timer timer;
 
     public DealerPlayingState(GameManager gm, Deck deck, Dealer dealer, Human human) {
@@ -46,13 +49,20 @@ public class DealerPlayingState extends GameState implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (dealer.getScore().getPossibleScores().iterator().next() < 17) {
+        List<Integer> scores = dealer.getScore().getPossibleScores();
+        int handScore = scores.iterator().next();
+        for (int score : scores) {
+            if (score <= GlobalConfig.getBlackjackWinScore() && handScore < score) {
+                handScore = score;
+            }
+        }
+
+        if (dealer.getScore().getPossibleScores().iterator().next() < DEALER_STAND_SCORE) {
             dealCardToPlayer(dealer);
             gm.fireStateChange(null);
         } else {
             timer.stop();
-            gm.setGameState(gm.getGameRoundEndState());
-            gm.fireStateChange(GameStateChanged.GAME_ROUND_END_STATE);
+            setGameRoundEndState();
         }
     }
 }

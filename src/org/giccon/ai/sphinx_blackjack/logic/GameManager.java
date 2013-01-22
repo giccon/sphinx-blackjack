@@ -136,43 +136,53 @@ public class GameManager extends Observable {
                 break;
             case DOUBLE:
                 break;
-            case PLUS_ONE:
+            case SURRENDER:
+                gameState.surrender();
+                break;
+            case BET_ALL:
+                gameState.addBet(human.getCash());
+                break;
+            case BET_ONE:
                 gameState.addBet(1);
                 break;
-            case PLUS_FIVE:
+            case BET_FIVE:
                 gameState.addBet(5);
                 break;
-            case PLUS_TEN:
+            case BET_TEN:
                 gameState.addBet(10);
                 break;
-            case PLUS_TWENTY_FIVE:
+            case BET_TWENTY_FIVE:
                 gameState.addBet(25);
                 break;
-            case PLUS_FIFTY:
+            case BET_FIFTY:
                 gameState.addBet(50);
                 break;
-            case PLUS_HUNDRED:
+            case BET_HUNDRED:
                 gameState.addBet(100);
                 break;
-            case MINUS_ONE:
+            case TAKE_ALL:
+                gameState.withdrawBet(human.getBet());
+                break;
+            case TAKE_ONE:
                 gameState.withdrawBet(1);
                 break;
-            case MINUS_FIVE:
+            case TAKE_FIVE:
                 gameState.withdrawBet(5);
                 break;
-            case MINUS_TEN:
+            case TAKE_TEN:
                 gameState.withdrawBet(10);
                 break;
-            case MINUS_TWENTY_FIVE:
+            case TAKE_TWENTY_FIVE:
                 gameState.withdrawBet(25);
                 break;
-            case MINUS_FIFTY:
+            case TAKE_FIFTY:
                 gameState.withdrawBet(50);
                 break;
-            case MINUS_HUNDRED:
+            case TAKE_HUNDRED:
                 gameState.withdrawBet(100);
                 break;
             case RESTART:
+                gameState.restart();
                 break;
             case HELP:
                 break;

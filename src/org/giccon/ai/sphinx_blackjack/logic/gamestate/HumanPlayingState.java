@@ -52,8 +52,7 @@ public class HumanPlayingState extends GameState {
         }
 
         if (lowestScore > 21) {
-            gm.setGameState(gm.getGameRoundEndState());
-            gm.fireStateChange(GameStateChanged.GAME_ROUND_END_STATE);
+            setGameRoundEndState();
         } else {
             gm.fireStateChange(null);
         }
@@ -64,5 +63,10 @@ public class HumanPlayingState extends GameState {
         gm.setGameState(gm.getDealerPlayingState());
         gm.fireStateChange(GameStateChanged.DEALER_PLAYING_STATE);
         gm.getGameState().playDealer();
+    }
+
+    @Override
+    public void surrender() {
+
     }
 }

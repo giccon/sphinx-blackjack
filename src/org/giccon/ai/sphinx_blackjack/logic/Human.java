@@ -16,11 +16,13 @@
  */
 package org.giccon.ai.sphinx_blackjack.logic;
 
+import org.giccon.ai.sphinx_blackjack.config.GlobalConfig;
+
 /**
  * @author Paul Minasian
  */
 public class Human extends Player {
-    private final static int CASH_AMOUNT = 500;
+    private static final int CASH_AMOUNT = GlobalConfig.getPlayerCashAmount();
     private int cash;
     private int bet;
 
@@ -60,5 +62,15 @@ public class Human extends Player {
             cash += cashAmount;
         }
 
+    }
+
+    public void updateCash(int cashAmount) {
+        cash += bet;
+        bet = 0;
+        cash += cashAmount;
+    }
+
+    public void resetCash() {
+        cash = CASH_AMOUNT;
     }
 }

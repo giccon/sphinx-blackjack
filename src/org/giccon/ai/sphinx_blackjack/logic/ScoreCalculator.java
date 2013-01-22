@@ -17,6 +17,7 @@
 
 package org.giccon.ai.sphinx_blackjack.logic;
 
+import org.giccon.ai.sphinx_blackjack.config.GlobalConfig;
 import org.giccon.ai.sphinx_blackjack.logic.card.Card;
 import org.giccon.ai.sphinx_blackjack.logic.card.Rank;
 
@@ -31,6 +32,7 @@ import java.util.Map;
 public class ScoreCalculator {
 
     private static final Map<Rank, Integer> SCORETABLE = new HashMap<Rank, Integer>();
+    private static final int BLACKJACK_WIN_SCORE = GlobalConfig.getBlackjackWinScore();
 
     static {
         initializeScoreTable(SCORETABLE);
@@ -67,9 +69,9 @@ public class ScoreCalculator {
             }
         }
 
-        if (score2 == 21) {
+        if (score2 == BLACKJACK_WIN_SCORE) {
             score1 = score2;
-        } else if (score2 > 21) {
+        } else if (score2 > BLACKJACK_WIN_SCORE) {
             score2 = score1;
         }
 
@@ -88,9 +90,9 @@ public class ScoreCalculator {
 
         while (it.hasNext()) {
             int score = (Integer) it.next();
-            if (score > 21 && finalScore > score) {
+            if (score > BLACKJACK_WIN_SCORE && finalScore > score) {
                 finalScore = score;
-            } else if (score <= 21 && finalScore < score) {
+            } else if (score <= BLACKJACK_WIN_SCORE && finalScore < score) {
                 finalScore = score;
             }
         }
@@ -126,6 +128,6 @@ public class ScoreCalculator {
             }
         }
 
-        return (score == 21);
+        return (score == BLACKJACK_WIN_SCORE);
     }
 }

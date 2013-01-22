@@ -15,33 +15,30 @@
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.giccon.ai.sphinx_blackjack.logic.gamestate;
-
-import org.giccon.ai.sphinx_blackjack.logic.Dealer;
-import org.giccon.ai.sphinx_blackjack.logic.GameManager;
-import org.giccon.ai.sphinx_blackjack.logic.Human;
-import org.giccon.ai.sphinx_blackjack.logic.card.Deck;
+package org.giccon.ai.sphinx_blackjack.config;
 
 /**
  * Author: Paul Minasian
  */
-public class GameRoundEndState extends GameState {
-    public GameRoundEndState(GameManager gm, Deck deck, Dealer dealer, Human human) {
-        super(gm, deck, dealer, human);
+public final class GlobalConfig {
+    private static final int DEALER_STAND_SCORE = 17;
+    private static final double BLACKJACK_PAYOUT = 1.5;
+    private static final int PLAYER_CASH_AMOUNT = 500;
+    private static final int BLACKJACK_WIN_SCORE = 21;
+
+    public static int getDealerStandScore() {
+        return DEALER_STAND_SCORE;
     }
 
-    @Override
-    public void deal() {
-        sharedDeal();
+    public static double getBlackjackPayout() {
+        return BLACKJACK_PAYOUT;
     }
 
-    @Override
-    public void addBet(int cashAmount) {
-        sharedAddBet(cashAmount);
+    public static int getPlayerCashAmount() {
+        return PLAYER_CASH_AMOUNT;
     }
 
-    @Override
-    public void withdrawBet(int cashAmount) {
-        sharedWithdrawBet(cashAmount);
+    public static int getBlackjackWinScore() {
+        return BLACKJACK_WIN_SCORE;
     }
 }

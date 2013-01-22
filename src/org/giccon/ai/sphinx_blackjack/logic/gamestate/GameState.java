@@ -17,6 +17,7 @@
 
 package org.giccon.ai.sphinx_blackjack.logic.gamestate;
 
+import org.giccon.ai.sphinx_blackjack.config.GlobalConfig;
 import org.giccon.ai.sphinx_blackjack.logic.Dealer;
 import org.giccon.ai.sphinx_blackjack.logic.GameManager;
 import org.giccon.ai.sphinx_blackjack.logic.Human;
@@ -57,6 +58,12 @@ public abstract class GameState {
     public void withdrawBet(int cashAmount) {
     }
 
+    public void surrender() {
+    }
+
+    public void restart() {
+    }
+
     protected void sharedAddBet(int cashAmount) {
         human.addBet(cashAmount);
         gm.fireStateChange(null);
@@ -68,6 +75,13 @@ public abstract class GameState {
     }
 
     protected void sharedDeal() {
+        if (human.getBet() == 0) {
+            return;
+        }
+
+        dealer.disposeHand();
+        human.disposeHand();
+
         // 1st card
         dealCardToPlayer(human);
         // 2nd card
@@ -79,8 +93,7 @@ public abstract class GameState {
         dealCardToPlayer(dealer);
 
         if (dealer.hasBlackjackHand() || human.hasBlackjackHand()) {
-            gm.setGameState(gm.getGameRoundEndState());
-            gm.fireStateChange(GameStateChanged.GAME_ROUND_END_STATE);
+            setGameRoundEndState();
         } else {
             gm.setGameState(gm.getHumanPlayingState());
             gm.fireStateChange(GameStateChanged.HUMAN_PLAYING_STATE);
@@ -92,5 +105,31 @@ public abstract class GameState {
             deck.reset();
         }
         player.receiveCard(deck.dealCard());
+    }
+
+    protected void setGameRoundEndState() {
+        GameManager.Winner winner = gm.getWinner();
+
+        int cashAmount = human.getBet();
+        switch (winner) {
+            case DEALER:
+                cashAmount *= -1;
+            case HUMAN:
+                if (human.hasBlackjackHand()) {
+                    cashAmount = (int) Math.ceil((double) cashAmount * GlobalConfig.getBlackjackPayout());
+                }
+                break;
+            default:
+                cashAmount = 0;
+        }
+        human.updateCash(cashAmount);
+
+        if (human.getCash() == 0) {
+            gm.setGameState(gm.getGameOverState());
+            gm.fireStateChange(GameStateChanged.GAME_OVER_STATE);
+        } else {
+            gm.setGameState(gm.getGameRoundEndState());
+            gm.fireStateChange(GameStateChanged.GAME_ROUND_END_STATE);
+        }
     }
 }

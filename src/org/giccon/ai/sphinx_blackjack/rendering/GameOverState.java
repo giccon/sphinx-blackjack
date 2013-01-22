@@ -20,6 +20,7 @@ package org.giccon.ai.sphinx_blackjack.rendering;
 import org.giccon.ai.sphinx_blackjack.logic.Player;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Author: Paul Minasian
@@ -28,5 +29,22 @@ public class GameOverState extends RenderState {
 
     public GameOverState(JPanel canvas, Player dealer, Player human) {
         super(canvas, dealer, human);
+    }
+
+    @Override
+    public void render(Graphics g) {
+        drawDeckCards(g);
+        drawDealerCards(g, false);
+        drawHumanCards(g);
+        drawCommandLegend(g);
+        drawPlayerCashInfo(g);
+        drawGameOverInfo(g);
+    }
+
+    private void drawGameOverInfo(Graphics g) {
+        int xCoord = canvas.getWidth() / 2 - 30;
+        int yCoord = DEALER_CARD_Y_COORD + cim.getCardHeight() + 45;
+        g.setColor(Color.BLUE);
+        g.drawString("Game Over! Say: restart", xCoord, yCoord);
     }
 }

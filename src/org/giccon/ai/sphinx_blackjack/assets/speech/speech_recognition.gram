@@ -6,24 +6,26 @@
 
 grammar sphinx-blackjack;
 
-public <commands> = correct | wrong
-| plus one
-| plus five
-| plus ten
-| plus twenty five
-| plus fifty
-| plus hundred
-| minus one
-| minus five
-| minus ten
-| minus twenty five
-| minus fifty
-| minus hundred
+public <commands> = bet all
+| bet one
+| bet five
+| bet ten
+| bet twenty five
+| bet fifty
+| bet hundred
+| take all
+| take one
+| take five
+| take ten
+| take twenty five
+| take fifty
+| take hundred
 | deal
 | hit
 | stand
 | double
 | split
+| surrender
 | restart
 | help
 | quit

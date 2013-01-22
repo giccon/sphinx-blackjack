@@ -148,10 +148,10 @@ public class RenderState {
 
         g.setFont(arial12);
         g.setColor(Color.BLACK);
-        g.drawString("plus one | plus five | plus ten | plus twenty five | plus fifty | plus hundred",
+        g.drawString("bet all | bet one | bet five | bet ten | bet twenty five | bet fifty | bet hundred",
                 10, COMMAND_CARD_Y_COORD + 30);
 
-        g.drawString("minus one | minus five | minus ten | minus twenty five | minus fifty | minus hundred",
+        g.drawString("take all | take one | take five | take ten | take twenty five | take fifty | take hundred",
                 10, COMMAND_CARD_Y_COORD + 50);
 
         g.drawString("deal | hit | stand | double | split", 10, COMMAND_CARD_Y_COORD + 70);

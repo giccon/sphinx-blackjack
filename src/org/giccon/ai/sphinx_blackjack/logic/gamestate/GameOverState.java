@@ -29,4 +29,14 @@ public class GameOverState extends GameState {
     public GameOverState(GameManager gm, Deck deck, Dealer dealer, Human human) {
         super(gm, deck, dealer, human);
     }
+
+    @Override
+    public void restart() {
+        dealer.disposeHand();
+        human.disposeHand();
+        human.resetCash();
+
+        gm.setGameState(gm.getGameIdleState());
+        gm.fireStateChange(GameStateChanged.GAME_IDLE_STATE);
+    }
 }
