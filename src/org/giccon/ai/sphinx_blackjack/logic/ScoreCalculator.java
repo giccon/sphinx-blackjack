@@ -21,6 +21,7 @@ import org.giccon.ai.sphinx_blackjack.logic.card.Card;
 import org.giccon.ai.sphinx_blackjack.logic.card.Rank;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,22 @@ public class ScoreCalculator {
 
     static {
         initializeScoreTable(SCORETABLE);
+    }
+
+    private static void initializeScoreTable(Map<Rank, Integer> scoretable) {
+        scoretable.put(Rank.ACE, 1);
+        scoretable.put(Rank.TWO, 2);
+        scoretable.put(Rank.THREE, 3);
+        scoretable.put(Rank.FOUR, 4);
+        scoretable.put(Rank.FIVE, 5);
+        scoretable.put(Rank.SIX, 6);
+        scoretable.put(Rank.SEVEN, 7);
+        scoretable.put(Rank.EIGHT, 8);
+        scoretable.put(Rank.NINE, 9);
+        scoretable.put(Rank.TEN, 10);
+        scoretable.put(Rank.JACK, 10);
+        scoretable.put(Rank.QUEEN, 10);
+        scoretable.put(Rank.KING, 10);
     }
 
     public HandScore calculateScore(List<Card> hand) {
@@ -64,6 +81,23 @@ public class ScoreCalculator {
         return handScore;
     }
 
+    public int calculateFinalScore(List<Card> hand) {
+        HandScore handScore = calculateScore(hand);
+        Iterator it = handScore.getPossibleScores().iterator();
+        int finalScore = (Integer) it.next();
+
+        while (it.hasNext()) {
+            int score = (Integer) it.next();
+            if (score > 21 && finalScore > score) {
+                finalScore = score;
+            } else if (score <= 21 && finalScore < score) {
+                finalScore = score;
+            }
+        }
+
+        return finalScore;
+    }
+
     private int getCardValue(Card c, boolean highAceScore) {
         int value;
         Rank rank = c.getRank();
@@ -76,19 +110,22 @@ public class ScoreCalculator {
         return value;
     }
 
-    private static void initializeScoreTable(Map<Rank, Integer> scoretable) {
-        scoretable.put(Rank.ACE, 1);
-        scoretable.put(Rank.TWO, 2);
-        scoretable.put(Rank.THREE, 3);
-        scoretable.put(Rank.FOUR, 4);
-        scoretable.put(Rank.FIVE, 5);
-        scoretable.put(Rank.SIX, 6);
-        scoretable.put(Rank.SEVEN, 7);
-        scoretable.put(Rank.EIGHT, 8);
-        scoretable.put(Rank.NINE, 9);
-        scoretable.put(Rank.TEN, 10);
-        scoretable.put(Rank.JACK, 10);
-        scoretable.put(Rank.QUEEN, 10);
-        scoretable.put(Rank.KING, 10);
+    public boolean isBlackjackHand(List<Card> hand) {
+        if (hand.size() > 2) {
+            return false;
+        }
+
+        boolean isAce = false;
+        int score = 0;
+        for (Card c : hand) {
+            if (c.isAce() && !isAce) {
+                isAce = true;
+                score += getCardValue(c, true);
+            } else {
+                score += getCardValue(c, false);
+            }
+        }
+
+        return (score == 21);
     }
 }

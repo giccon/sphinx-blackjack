@@ -28,7 +28,6 @@ import java.util.List;
 public abstract class Player {
 
     private static final ScoreCalculator scoreCalculator = new ScoreCalculator();
-
     private List<Card> hand;
 
     public Player() {
@@ -51,8 +50,12 @@ public abstract class Player {
         return scoreCalculator.calculateScore(hand);
     }
 
+    public int getFinalScore() {
+        return scoreCalculator.calculateFinalScore(hand);
+    }
+
     public boolean hasBlackjackHand() {
-        return true;
+        return scoreCalculator.isBlackjackHand(hand);
     }
 
     public boolean hasHandScoreOf21() {

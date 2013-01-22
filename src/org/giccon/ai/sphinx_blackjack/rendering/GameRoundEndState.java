@@ -17,6 +17,7 @@
 
 package org.giccon.ai.sphinx_blackjack.rendering;
 
+import org.giccon.ai.sphinx_blackjack.logic.GameManager;
 import org.giccon.ai.sphinx_blackjack.logic.Player;
 
 import javax.swing.*;
@@ -38,5 +39,29 @@ public class GameRoundEndState extends RenderState {
         drawHumanCards(g);
         drawCommandLegend(g);
         drawPlayerCashInfo(g);
+        drawWinnerStatus(g);
+    }
+
+    private void drawWinnerStatus(Graphics g) {
+        GameManager.Winner winner = gm.getWinner();
+        String winnerText;
+        switch (winner) {
+            case DEALER:
+                winnerText = "Dealer Wins";
+                break;
+            case HUMAN:
+                winnerText = "Player Wins";
+                break;
+            case PUSH:
+                winnerText = "Push";
+                break;
+            default:
+                winnerText = "";
+        }
+
+        int xCoord = canvas.getWidth() / 2 - 30;
+        int yCoord = DEALER_CARD_Y_COORD + cim.getCardHeight() + 45;
+        g.setColor(Color.BLUE);
+        g.drawString(winnerText, xCoord, yCoord);
     }
 }

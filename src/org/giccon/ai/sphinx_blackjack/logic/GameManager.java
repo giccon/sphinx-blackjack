@@ -198,6 +198,40 @@ public class GameManager extends Observable {
         notifyObservers(arg);
     }
 
+    public Winner getWinner() {
+        if (human.hasBlackjackHand() && dealer.hasBlackjackHand()) {
+            return Winner.PUSH;
+        }
+
+        if (human.hasBlackjackHand()) {
+            return Winner.HUMAN;
+        }
+
+        if (dealer.hasBlackjackHand()) {
+            return Winner.DEALER;
+        }
+
+        int humanScore = human.getFinalScore();
+        if (humanScore > 21) {
+            return Winner.DEALER;
+        }
+
+        int dealerScore = dealer.getFinalScore();
+        if (humanScore == dealerScore) {
+            return Winner.PUSH;
+        } else if (dealerScore > 21) {
+            return Winner.HUMAN;
+        } else if (dealerScore > humanScore) {
+            return Winner.DEALER;
+        }
+
+        return Winner.HUMAN;
+    }
+
+    public static enum Winner {
+        DEALER, HUMAN, PUSH
+    }
+
     private class ResultListenerHandler implements ResultListener {
         @Override
         public void newResult(Result result) {

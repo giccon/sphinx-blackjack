@@ -20,7 +20,6 @@ package org.giccon.ai.sphinx_blackjack.speech;
 import edu.cmu.sphinx.decoder.ResultListener;
 import edu.cmu.sphinx.frontend.util.Microphone;
 import edu.cmu.sphinx.recognizer.Recognizer;
-import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 
 /**
@@ -123,7 +122,6 @@ public class SpeechRecognitionManager {
         @Override
         public void run() {
             while (runSpeechRecognitionEngine) {
-                Result result;
                 synchronized (recognizer) {
                     recognizer.recognize();
                 }

@@ -78,9 +78,13 @@ public abstract class GameState {
         // 2nd card
         dealCardToPlayer(dealer);
 
-
-        gm.setGameState(gm.getHumanPlayingState());
-        gm.fireStateChange(GameStateChanged.HUMAN_PLAYING_STATE);
+        if (dealer.hasBlackjackHand() || human.hasBlackjackHand()) {
+            gm.setGameState(gm.getGameRoundEndState());
+            gm.fireStateChange(GameStateChanged.GAME_ROUND_END_STATE);
+        } else {
+            gm.setGameState(gm.getHumanPlayingState());
+            gm.fireStateChange(GameStateChanged.HUMAN_PLAYING_STATE);
+        }
     }
 
     protected void dealCardToPlayer(Player player) {
