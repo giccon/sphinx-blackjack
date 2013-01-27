@@ -28,6 +28,7 @@ import org.giccon.ai.sphinx_blackjack.speech.SpeechRecognitionException;
 import org.giccon.ai.sphinx_blackjack.speech.SpeechRecognitionManager;
 import org.giccon.ai.sphinx_blackjack.speech.VoiceCommand;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Observable;
 
@@ -47,13 +48,13 @@ public class GameManager extends Observable {
     private final Deck deck;
     private final Dealer dealer;
     private final Human human;
+    private Component gui;
     private GameState gameState;
 
     private GameManager() {
         deck = new StandardDeck();
         dealer = new Dealer();
         human = new Human();
-
         gameIdleState = new GameIdleState(this, deck, dealer, human);
         humanPlayingState = new HumanPlayingState(this, deck, dealer, human);
         dealerPlayingState = new DealerPlayingState(this, deck, dealer, human);
@@ -65,20 +66,26 @@ public class GameManager extends Observable {
         // Game enters the game idle state.
         gameState = gameIdleState;
         fireStateChange(GameStateChanged.GAME_IDLE_STATE);
-
-        try {
-            srm.initSpeechRecognitionEngine();
-            srm.startSpeechRecognitionEngine();
-            srm.addResultListener(resultListenerHandler);
-        } catch (SpeechRecognitionException ignore) {
-            // todo handle speech recognition exception
-        } catch (MicrophoneException ignore) {
-            // todo handle microphone exception
-        }
     }
 
     public static GameManager getInstance() {
         return INSTANCE;
+    }
+
+    public void startSpeechEngine() {
+        try {
+            if (srm.getState() == SpeechRecognitionManager.State.DEINITIALIZED) {
+                srm.initSpeechRecognitionEngine();
+            }
+            if (srm.getState() == SpeechRecognitionManager.State.INITIALIZED) {
+                srm.startSpeechRecognitionEngine();
+                srm.addResultListener(resultListenerHandler);
+            }
+        } catch (SpeechRecognitionException e) {
+            showErrorAndExitProgram(e);
+        } catch (MicrophoneException e) {
+            showErrorAndExitProgram(e);
+        }
     }
 
     public Dealer getDealer() {
@@ -121,7 +128,63 @@ public class GameManager extends Observable {
         return gameOverState;
     }
 
-    public void handleVoiceCommand(VoiceCommand vc) {
+    public void setGui(Component gui) {
+        this.gui = gui;
+    }
+
+    public void fireStateChange(GameStateChanged arg) {
+        setChanged();
+        notifyObservers(arg);
+    }
+
+    public void fireVoiceCommand(VoiceCommand arg) {
+        setChanged();
+        notifyObservers(arg);
+    }
+
+    public Winner getWinner() {
+        if (human.hasBlackjackHand() && dealer.hasBlackjackHand()) {
+            return Winner.PUSH;
+        }
+
+        if (human.hasBlackjackHand()) {
+            return Winner.HUMAN;
+        }
+
+        if (dealer.hasBlackjackHand()) {
+            return Winner.DEALER;
+        }
+
+        int humanScore = human.getFinalScore();
+        if (humanScore > 21) {
+            return Winner.DEALER;
+        }
+
+        int dealerScore = dealer.getFinalScore();
+        if (humanScore == dealerScore) {
+            return Winner.PUSH;
+        } else if (dealerScore > 21) {
+            return Winner.HUMAN;
+        } else if (dealerScore > humanScore) {
+            return Winner.DEALER;
+        }
+
+        return Winner.HUMAN;
+    }
+
+    private void showErrorAndExitProgram(Exception e) {
+        if (gui != null) {
+            JOptionPane.showMessageDialog(gui,
+                    "An error took place: " + e.getMessage() + ". Going to exit the program now.");
+        }
+        System.exit(-1);
+    }
+
+    private void handleVoiceCommand(VoiceCommand vc) {
+        if (vc != VoiceCommand.UNRECOGNIZED) {
+            fireVoiceCommand(vc);
+        }
+
         switch (vc) {
             case DEAL:
                 gameState.deal();
@@ -203,41 +266,6 @@ public class GameManager extends Observable {
         }
     }
 
-    public void fireStateChange(GameStateChanged arg) {
-        setChanged();
-        notifyObservers(arg);
-    }
-
-    public Winner getWinner() {
-        if (human.hasBlackjackHand() && dealer.hasBlackjackHand()) {
-            return Winner.PUSH;
-        }
-
-        if (human.hasBlackjackHand()) {
-            return Winner.HUMAN;
-        }
-
-        if (dealer.hasBlackjackHand()) {
-            return Winner.DEALER;
-        }
-
-        int humanScore = human.getFinalScore();
-        if (humanScore > 21) {
-            return Winner.DEALER;
-        }
-
-        int dealerScore = dealer.getFinalScore();
-        if (humanScore == dealerScore) {
-            return Winner.PUSH;
-        } else if (dealerScore > 21) {
-            return Winner.HUMAN;
-        } else if (dealerScore > humanScore) {
-            return Winner.DEALER;
-        }
-
-        return Winner.HUMAN;
-    }
-
     public static enum Winner {
         DEALER, HUMAN, PUSH
     }
@@ -250,8 +278,8 @@ public class GameManager extends Observable {
                 public void run() {
                     try {
                         handleVoiceCommand(VoiceCommand.getVoiceCommand(command));
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ignore) {
+                        // ignore
                     }
                 }
             });

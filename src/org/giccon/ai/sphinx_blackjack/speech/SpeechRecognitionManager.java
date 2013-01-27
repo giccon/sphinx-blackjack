@@ -28,23 +28,26 @@ import edu.cmu.sphinx.util.props.ConfigurationManager;
 public class SpeechRecognitionManager {
 
     private static final String SPEECH_CONFIG_PATH = ""
-            + "org/giccon/ai/sphinx_blackjack/assets/speech/speech_recognition.config.xml";
+            + "/org/giccon/ai/sphinx_blackjack/assets/speech/speech_recognition.config.xml";
     private static final SpeechRecognitionManager instance = new SpeechRecognitionManager();
-    private final ConfigurationManager config_manager;
-    private Recognizer recognizer;
-    private Microphone microphone;
+    private final Recognizer recognizer;
+    private final Microphone microphone;
     private SpeechRecognitionLoop speechRecognitionLoop;
     private volatile boolean runSpeechRecognitionEngine;
     private State state = State.DEINITIALIZED;
 
     private SpeechRecognitionManager() {
-        config_manager = new ConfigurationManager(ClassLoader.getSystemResource(SPEECH_CONFIG_PATH));
+        ConfigurationManager config_manager = new ConfigurationManager(getClass().getResource(SPEECH_CONFIG_PATH));
         recognizer = (Recognizer) config_manager.lookup("recognizer");
         microphone = (Microphone) config_manager.lookup("microphone");
     }
 
     public synchronized static SpeechRecognitionManager getInstance() {
         return instance;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public synchronized void initSpeechRecognitionEngine() throws SpeechRecognitionException, MicrophoneException {
@@ -114,7 +117,7 @@ public class SpeechRecognitionManager {
         }
     }
 
-    private static enum State {
+    public static enum State {
         INITIALIZED, STARTED, STOPPED, DEINITIALIZED
     }
 

@@ -20,6 +20,7 @@ package org.giccon.ai.sphinx_blackjack.rendering;
 import org.giccon.ai.sphinx_blackjack.logic.GameManager;
 import org.giccon.ai.sphinx_blackjack.logic.Player;
 import org.giccon.ai.sphinx_blackjack.logic.gamestate.GameStateChanged;
+import org.giccon.ai.sphinx_blackjack.speech.VoiceCommand;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,9 +60,11 @@ public class Renderer implements Observer {
         if (o instanceof GameManager) {
             if (arg == null) {
                 canvas.repaint();
-            }
-            if (arg instanceof GameStateChanged) {
+            } else if (arg instanceof GameStateChanged) {
                 setRenderState((GameStateChanged) arg);
+                canvas.repaint();
+            } else if (arg instanceof VoiceCommand) {
+                RenderState.setVoiceCommand((VoiceCommand) arg);
                 canvas.repaint();
             }
         }

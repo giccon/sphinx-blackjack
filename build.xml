@@ -41,7 +41,7 @@
     <property name="build_dir" value="bld"/>
     <property name="classes_dir" value="${build_dir}"/>
     <property name="lib_dir" value="lib"/>
-    <property name="bin_dir" value="bin"/>
+    <property name="deploy_dir" value="deploy"/>
 
     <path id="libs">
         <pathelement path="${classes_dir}"/>
@@ -62,12 +62,11 @@
         <copy todir="${classes_dir}/org/giccon/ai/sphinx_blackjack/assets/">
             <fileset dir="src/org/giccon/ai/sphinx_blackjack/assets/"/>
         </copy>
-        <mkdir dir="${bin_dir}"/>
 
         <unjar src="lib/sphinx4.jar" dest="${classes_dir}/"/>
         <unjar src="lib/WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz.jar" dest="${classes_dir}/"/>
 
-        <jar destfile="${bin_dir}/Sphinx-Blackjack.jar"
+        <jar destfile="${deploy_dir}/Sphinx-Blackjack.jar"
              manifest="src/org/giccon/ai/sphinx_blackjack/sphinx_blackjack.manifest"
              basedir="${classes_dir}"
              includes="**"

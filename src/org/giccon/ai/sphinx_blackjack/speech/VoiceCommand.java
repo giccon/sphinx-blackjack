@@ -37,16 +37,16 @@ public enum VoiceCommand {
     TAKE_TWENTY_FIVE("take twenty five"),
     TAKE_FIFTY("take fifty"),
     TAKE_HUNDRED("take hundred"),
-    DEAL("deal"),
-    HIT("hit"),
-    STAND("stand"),
-    DOUBLE("double"),
-    SPLIT("split"),
-    SURRENDER("surrender"),
+    DEAL("go deal"),
+    HIT("go hit"),
+    STAND("go stand"),
+    DOUBLE("go double"),
+    SPLIT("go split"),
+    SURRENDER("go surrender"),
     RESTART("restart"),
-    HELP("help"),
-    QUIT("quit"),
-    UNRECOGNIZED("");
+    HELP("go help"),
+    QUIT("go quit"),
+    UNRECOGNIZED("unrecognized");
     private String command;
 
     private VoiceCommand(String command) {
@@ -61,5 +61,9 @@ public enum VoiceCommand {
         }
 
         return UNRECOGNIZED;
+    }
+
+    public String getCommand() {
+        return command;
     }
 }

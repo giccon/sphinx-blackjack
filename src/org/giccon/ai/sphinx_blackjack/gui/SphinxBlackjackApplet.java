@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Sphinx Blackjack.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.giccon.ai.sphinx_blackjack.gui;
 
 import org.giccon.ai.sphinx_blackjack.logic.GameManager;
@@ -24,57 +25,44 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * The main application entry.
- *
- * @author Paul Minasian
+ * Author: Paul Minasian
  */
-public class SphinxBlackjackGui {
-
-    private JFrame frmSphinxBlackjack;
-
+public class SphinxBlackjackApplet extends JApplet {
     /**
-     * Create the application.
+     * Init the application.
      */
-    public SphinxBlackjackGui() {
-        initialize();
-    }
-
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    SphinxBlackjackGui window = new SphinxBlackjackGui();
-                    window.frmSphinxBlackjack.setVisible(true);
-                } catch (Exception e) {
-                    System.exit(1);
+    public void init() {
+        // Execute a job on the event-dispatching thread; creating this applet's GUI.
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    initialize();
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Application initialization didn't complete successfully.");
+        }
     }
 
     /**
      * Initialise the contents of the frame.
      */
     private void initialize() {
-        Thread.currentThread().setName("SphinxBlackjackGui");
-        frmSphinxBlackjack = new JFrame();
-        frmSphinxBlackjack.setTitle("Sphinx Blackjack");
-        frmSphinxBlackjack.setMinimumSize(new Dimension(800, 600));
-        frmSphinxBlackjack.setResizable(false);
-        frmSphinxBlackjack.setBounds(100, 100, 450, 300);
-        frmSphinxBlackjack.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        Thread.currentThread().setName("SphinxBlackjackApplet");
+        setMinimumSize(new Dimension(800, 600));
+        setMaximumSize(new Dimension(800, 600));
+        setBounds(100, 100, 450, 300);
 
         CardImageManager.getInstance();
         GameManager gm = GameManager.getInstance();
-        gm.setGui(frmSphinxBlackjack);
         Player dealer = gm.getDealer();
         Player human = gm.getHuman();
+
         CardDrawPanel pnlCard = new CardDrawPanel(dealer, human);
+        pnlCard.setOpaque(true);
+        setContentPane(pnlCard);
+        gm.setGui(pnlCard);
         gm.notifyObservers();
-        frmSphinxBlackjack.getContentPane().add(pnlCard, BorderLayout.CENTER);
         gm.startSpeechEngine();
     }
 }

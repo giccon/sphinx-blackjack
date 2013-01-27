@@ -6,7 +6,11 @@
 
 grammar sphinx-blackjack;
 
-public <commands> = bet all
+public <commands> = go deal
+| go hit
+| go stand
+| restart
+| bet all
 | bet one
 | bet five
 | bet ten
@@ -20,13 +24,4 @@ public <commands> = bet all
 | take twenty five
 | take fifty
 | take hundred
-| deal
-| hit
-| stand
-| double
-| split
-| surrender
-| restart
-| help
-| quit
 ;

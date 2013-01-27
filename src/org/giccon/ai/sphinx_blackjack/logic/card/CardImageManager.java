@@ -32,13 +32,10 @@ import java.util.Map;
 public class CardImageManager {
 
     private static final String IMAGE_PATH = ""
-            + "org/giccon/ai/sphinx_blackjack/assets/images/cards.png";
-
+            + "/org/giccon/ai/sphinx_blackjack/assets/images/cards.png";
     private static final CardImageManager INSTANCE = new CardImageManager();
-
     private Map<Rank, Map<Suit, Image>> cardImages;
     private Image backOfCardImage;
-
     private int cardWidth;
     private int cardHeight;
 
@@ -46,8 +43,12 @@ public class CardImageManager {
         loadCardImages();
     }
 
+    public static CardImageManager getInstance() {
+        return INSTANCE;
+    }
+
     private void loadCardImages() {
-        URL cardsUrl = ClassLoader.getSystemResource(IMAGE_PATH);
+        URL cardsUrl = getClass().getResource(IMAGE_PATH);
         BufferedImage bi;
         try {
             bi = ImageIO.read(cardsUrl);
@@ -79,10 +80,6 @@ public class CardImageManager {
 
         backOfCardImage = bi.getSubimage(2 * cardWidth, 4 * cardHeight,
                 cardWidth, cardHeight);
-    }
-
-    public static CardImageManager getInstance() {
-        return INSTANCE;
     }
 
     public Image getCardImage(Rank rank, Suit suit) {

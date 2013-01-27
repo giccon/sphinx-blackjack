@@ -45,6 +45,6 @@ public class GameOverState extends RenderState {
         int xCoord = canvas.getWidth() / 2 - 30;
         int yCoord = DEALER_CARD_Y_COORD + cim.getCardHeight() + 45;
         g.setColor(Color.BLUE);
-        g.drawString("Game Over! Say: restart", xCoord, yCoord);
+        g.drawString("Game Over! Say restart", xCoord, yCoord);
     }
 }

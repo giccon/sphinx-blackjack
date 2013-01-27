@@ -23,6 +23,7 @@ import org.giccon.ai.sphinx_blackjack.logic.Human;
 import org.giccon.ai.sphinx_blackjack.logic.Player;
 import org.giccon.ai.sphinx_blackjack.logic.card.Card;
 import org.giccon.ai.sphinx_blackjack.logic.card.CardImageManager;
+import org.giccon.ai.sphinx_blackjack.speech.VoiceCommand;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +40,7 @@ public class RenderState {
     protected static final int CARD_VISIBILITY_WIDTH = 30;
     protected static final Font arial14 = new Font("Arial", Font.BOLD, 14);
     protected static final Font arial12 = new Font("Arial", Font.BOLD, 12);
+    protected static VoiceCommand voiceCommand = VoiceCommand.UNRECOGNIZED;
     protected CardImageManager cim = CardImageManager.getInstance();
     protected GameManager gm = GameManager.getInstance();
     protected JPanel canvas;
@@ -49,6 +51,10 @@ public class RenderState {
         this.canvas = canvas;
         this.dealer = dealer;
         this.human = human;
+    }
+
+    public static void setVoiceCommand(VoiceCommand voiceCommand) {
+        RenderState.voiceCommand = voiceCommand;
     }
 
     public void render(Graphics g) {
@@ -143,8 +149,12 @@ public class RenderState {
 
         g.setColor(Color.RED);
         g.setFont(arial14);
-        g.drawString("Voice-controlled Interface: Please speak one of the below " +
-                "commands when applicable:", 10, COMMAND_CARD_Y_COORD);
+        g.drawString("Please speak one of the below commands when applicable:", 10, COMMAND_CARD_Y_COORD);
+
+        if (voiceCommand != VoiceCommand.UNRECOGNIZED) {
+            g.setColor(Color.BLUE);
+            g.drawString(" You've said: " + voiceCommand.getCommand(), 450, COMMAND_CARD_Y_COORD);
+        }
 
         g.setFont(arial12);
         g.setColor(Color.BLACK);
@@ -154,9 +164,9 @@ public class RenderState {
         g.drawString("take all | take one | take five | take ten | take twenty five | take fifty | take hundred",
                 10, COMMAND_CARD_Y_COORD + 50);
 
-        g.drawString("deal | hit | stand | double | split", 10, COMMAND_CARD_Y_COORD + 70);
+        g.drawString("go deal | go hit | go stand", 10, COMMAND_CARD_Y_COORD + 70);
         g.setColor(Color.BLUE);
-        g.drawString("restart | help", 10, COMMAND_CARD_Y_COORD + 100);
+        g.drawString("restart", 10, COMMAND_CARD_Y_COORD + 100);
 
     }
 
