@@ -3,8 +3,6 @@
 -------------------------------------------------------------------------------
 Sphinx Blackjack is a voice-controlled blackjack game using the Sphinx speech
 recognition engine.
-Please refer to http://ai.giccon.org/projects/voice-controlled-interface/sphinx-blackjack/
-for more information.
 
 -------------------------------------------------------------------------------
                                      License
@@ -14,4 +12,4 @@ The source code is published under GNU GENERAL PUBLIC LICENSE Version 3, 29 June
 -------------------------------------------------------------------------------
                        Running the program during development
 -------------------------------------------------------------------------------
-To start the program please run the main in class SphinxBlackjackGui.
+To start the program run the main in class SphinxBlackjackGui.
