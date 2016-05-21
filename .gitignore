@@ -2,6 +2,7 @@
 ###################
 bld
 deploy
+.idea
 
 # Compiled source #
 ###################
